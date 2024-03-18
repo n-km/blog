@@ -1,0 +1,24 @@
+body {
+    margin: 15px;
+    box-shadow: 0 0 3px black;
+    padding: 15px;
+    font-family: "arial";
+}
+.task {
+    width: 100%;
+    padding: 15px;
+}
+.task a {
+    text-decoration: none;
+    color: rgb(107, 107, 107);
+    transition: 0.2s;
+    padding: 5px;
+    font-weight: 600;
+}
+.task a:hover {
+    color: black;
+}
+.task a[disabled="disabled"] {
+    color: black;
+    cursor:not-allowed;
+}

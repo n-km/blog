@@ -1,0 +1,11 @@
+Hallo und wilkommen zu meinem ersten Blog!
+In diesem Blog möchte ich Ihnen ganz einfach das System des Blog-Managers beibringen.
+
+->Files:
+        Hier werden die Dateien angezeigt, die ich hochgeladen habe.
+->Pictures:
+        Hier werden die Bilder angezeigt, die ich hochgeladen habe.
+->Blog:
+        Hier erscheinen dann die zusammengefügten Blogs, die mit Aufwand erstellt werden.
+
+Ich wünsche Ihnen ein tollen Aufenthalt!
