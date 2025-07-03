@@ -1,8 +1,16 @@
 
 [
     {
+        "title": "Mein Portfolio",
+        "date": "03. Juli 2025",
+        "author": "n-km",
+        "category": "Allgemein",
+        "image": "images/01.png",
+        "text": "Ich habe ein Portfolio auf GitHub, wo man mehrere Bilder sehen und herunterladen kann. Wenn Sie möchten können Sie gerne mal die Webseite besuchen. Diese Webseite habe ich von Grund auf selbst programmiert. Ich hoffe, es gefällt Ihnen. Wenn überhaupt jemand auf diese Seite gelangt xD. <a href='https://n-km.github.io/insta'>https://n-km.github.io/insta</a>"
+    },
+    {
         "title": "Zitrone im Regen",
-        "date": "28. Juni 2024",
+        "date": "03. Juli 2025",
         "author": "Nils Koltermann",
         "category": "Makro",
         "image": "https://n-km.github.io/insta/pictures_template/04.08.2024/IMG_4582.jpg",
@@ -10,7 +18,7 @@
     },
     {
         "title": "Wassertropfen im Spinnennetz verfangen",
-        "date": "28. Juni 2024",
+        "date": "03. Juli 2025",
         "author": "Nils Koltermann",
         "category": "Makro",
         "image": "https://n-km.github.io/insta/pictures_template/04.08.2024/IMG_4577.jpg",
