@@ -2,12 +2,20 @@
 [
 
     {
+        "title": "Statusupdate",
+        "date": "09. Juli 2025",
+        "author": "n-km",
+        "category": "Statusupdate",
+        "image": "",
+        "text": "Was sind Statusupdates? - Statusupdates sind Updates von dem laufendem Projekt, der Blog-Website hier. Diese Updates erfolgen wöchentlich variabel. Sie enthalten exklusive Informationen u.a. zum Fortschritt."
+    },
+    {
         "title": "Neuer Dienst: RSS",
         "date": "04. Juli 2025",
         "author": "n-km",
         "category": "Allgemein",
         "image": "",
-        "text": "Seit dem 03. Juli 2025 gibt es ein RSS-Feed für diesen Blog. Man kann sagen, dass ein RSS-Feed wie aktuelle Nachrichten sind, die kurz und knapp zu lesen sind. Um diese einzubetten, benötigen Sie folgendes: Einen RSS-Reader - Dafür gibt es entweder FreshRSS oder andere RSS-Reader. <br><br> RSS-Feed - Allgemein: <code>https://n-km.github.io/blog/rss.xml</code> <br><br> Viel Spaß beim Lesen!"
+        "text": "Seit dem 03. Juli 2025 gibt es ein RSS-Feed für diesen Blog. Man kann sagen, dass ein RSS-Feed wie aktuelle Nachrichten sind, die kurz und knapp zu lesen sind. Um diese einzubetten benötigen Sie folgendes: Einen RSS-Reader - Dafür gibt es entweder FreshRSS oder andere RSS-Reader. <br><br> RSS-Feed - Allgemein: <code>https://n-km.github.io/blog/rss.xml</code> <br><br> Viel Spaß beim Lesen!"
     },
     {
         "title": "Mein Portfolio",
