@@ -6,8 +6,16 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Fri, 04 Jul 2025 06:09:49 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 09 Jul 2025 06:49:47 GMT</lastBuildDate>
     <item>
+      <title>Statusupdate</title>
+      <link>https://n-km.github.io/blog/#statusupdate</link>
+      <description><![CDATA[Was sind Statusupdates? - Statusupdates sind Updates von dem laufendem Projekt, der Blog-Website hier. Diese Updates erfolgen wöchentlich variabel. Sie enthalten exklusive Informationen u.a. zum Fortschritt.]]></description>
+      <pubDate>Wed, 09 Jul 2025 06:00:00 GMT</pubDate>
+      <category>Statusupdate</category>
+      <author>n-km</author>
+    </item>
+<item>
       <title>Neuer Dienst: RSS</title>
       <link>https://n-km.github.io/blog/#neuer-dienst%3A-rss</link>
       <description><![CDATA[Seit dem 03. Juli 2025 gibt es ein RSS-Feed für diesen Blog. Man kann sagen, dass ein RSS-Feed wie aktuelle Nachrichten sind, die kurz und knapp zu lesen sind. Um diese einzubetten benötigen Sie folgendes: Einen RSS-Reader - Dafür gibt es entweder FreshRSS oder andere RSS-Reader. <br><br> RSS-Feed - Allgemein: <code>https://n-km.github.io/blog/rss.xml</code> <br><br> Viel Spaß beim Lesen!]]></description>
@@ -28,7 +36,7 @@
       <link>https://n-km.github.io/blog/#biene-durch-das-vintage-objektiv</link>
       <description><![CDATA[Hier habe ich mich wieder letztens mit meinem alten Body (Also die Canon EOS 600D) und dem Pentacon 50mm f/1.8, also ein Vintage-Objektiv, ausprobiert. Mit Erfolg: Mir flog eine Biene auf der gelben Blume und ich konnte sie gut manuell fokussieren und aufnehmen. Das Ergebnis: Den Moment mit einem schönem Bokeh und die Biene mit einer guten Auflösung aufgenommen. [<a href='https://flic.kr/p/2rehCeP'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54627969889_590e13ebc1_c.jpg">]]></description>
       <pubDate>Thu, 03 Jul 2025 06:00:00 GMT</pubDate>
-      <category>Makro</category>
+      <category>Insekta</category>
       <author>n-km</author>
     </item>
 <item>
