@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Aktivität - Minimal Blog</title>
+    <style>
+    :root {
+        --main-bg: #f8f8f8;
+        --main-text: #1d1d1f;
+        --primary: #0071e3;
+        --cat-bg: #e5eefb;
+        --cat-text: #1963a6;
+        --gray: #f2f2f7;
+        --white: #fff;
+        --shadow: 0 4px 16px 0 rgba(0,0,0,0.04), 0 1.5px 6px 0 rgba(0,0,0,0.08);
+        --radius: 18px;
+        --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --calendar-square-size: 11px;
+        --calendar-gap: 3px;
+        --calendar-active: #39d353;
+        --calendar-inactive: #ebedf0;
+    }
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    html, body {
+        min-height: 100%;
+        background: var(--main-bg);
+    }
+    
+    body {
+        font-family: var(--font-main);
+        color: var(--main-text);
+        line-height: 1.7;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    header {
+        padding: 2.5rem 0 1.2rem 0;
+        text-align: center;
+        background: var(--white);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    header h1 {
+        font-size: 2.2rem;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--main-text);
+    }
+    
+    header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+    
+    nav {
+        margin-top: 1.5rem;
+    }
+    
+    nav a {
+        display: inline-block;
+        padding: 0.7rem 1.5rem;
+        margin: 0 0.5rem;
+        color: var(--main-text);
+        text-decoration: none;
+        border-radius: var(--radius);
+        transition: all 0.2s;
+        background: var(--gray);
+    }
+    
+    nav a:hover, nav a.active {
+        background: var(--primary);
+        color: var(--white);
+    }
+    
+    main {
+        width: 100%;
+        max-width: 1000px;
+        margin: 2.2rem auto 2rem auto;
+        flex: 1 0 auto;
+        padding: 0 1.1rem;
+    }
+    
+    .calendar-container {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+    }
+    
+    .calendar-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .calendar-header h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .calendar-header p {
+        color: #666;
+        font-size: 1rem;
+    }
+    
+    .calendar-year {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    
+    .calendar-wrapper {
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+    
+    .calendar-months {
+        display: flex;
+        margin-bottom: 8px;
+        min-width: fit-content;
+    }
+    
+    .calendar-month-label {
+        font-size: 0.75rem;
+        color: #666;
+        text-align: center;
+        padding: 0 2px;
+        margin-right: var(--calendar-gap);
+    }
+    
+    .calendar-grid {
+        display: flex;
+        gap: var(--calendar-gap);
+        min-width: fit-content;
+    }
+    
+    .calendar-week {
+        display: flex;
+        flex-direction: column;
+        gap: var(--calendar-gap);
+    }
+    
+    .calendar-day {
+        width: var(--calendar-square-size);
+        height: var(--calendar-square-size);
+        background: var(--calendar-inactive);
+        border-radius: 2px;
+        border: 1px solid #d1d5da;
+    }
+    
+    .calendar-day.active {
+        background: var(--calendar-active);
+        border-color: #28a745;
+    }
+    
+    .calendar-weekdays {
+        display: flex;
+        flex-direction: column;
+        gap: var(--calendar-gap);
+        margin-right: 8px;
+        justify-content: flex-start;
+    }
+    
+    .calendar-weekday {
+        height: var(--calendar-square-size);
+        font-size: 0.6rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+    }
+    
+    .calendar-legend {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        color: #666;
+    }
+    
+    .calendar-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .calendar-legend-square {
+        width: var(--calendar-square-size);
+        height: var(--calendar-square-size);
+        border-radius: 2px;
+        border: 1px solid #d1d5da;
+    }
+    
+    .calendar-stats {
+        background: var(--gray);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .calendar-stats h3 {
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .stat-item {
+        background: var(--white);
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    footer {
+        background: var(--gray);
+        text-align: center;
+        padding: 1.5rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+        :root {
+            --calendar-square-size: 9px;
+            --calendar-gap: 2px;
+        }
+        
+        .calendar-container {
+            padding: 1rem;
+        }
+        
+        .calendar-header h2 {
+            font-size: 1.4rem;
+        }
+        
+        .calendar-weekday {
+            width: 12px;
+            font-size: 0.5rem;
+        }
+        
+        .calendar-month-label {
+            font-size: 0.6rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Blog Aktivität</h1>
+        <p>Jahresübersicht der Blog-Beiträge</p>
+        <nav>
+            <a href="index.html">Zurück zum Blog</a>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h2>Aktivitätsheatmap</h2>
+                <p>Jeder grüne Punkt zeigt einen Tag mit mindestens einem Blog-Beitrag</p>
+            </div>
+            
+            <div class="calendar-year" id="calendar-year">2025</div>
+            
+            <div class="calendar-wrapper">
+                <div class="calendar-months" id="calendar-months"></div>
+                <div style="display: flex;">
+                    <div class="calendar-weekdays">
+                        <div class="calendar-weekday">M</div>
+                        <div class="calendar-weekday">D</div>
+                        <div class="calendar-weekday">M</div>
+                        <div class="calendar-weekday">D</div>
+                        <div class="calendar-weekday">F</div>
+                        <div class="calendar-weekday">S</div>
+                        <div class="calendar-weekday">S</div>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                </div>
+            </div>
+            
+            <div class="calendar-legend">
+                <span>Weniger</span>
+                <div class="calendar-legend-item">
+                    <div class="calendar-legend-square" style="background: var(--calendar-inactive);"></div>
+                </div>
+                <div class="calendar-legend-item">
+                    <div class="calendar-legend-square" style="background: var(--calendar-active);"></div>
+                </div>
+                <span>Mehr</span>
+            </div>
+        </div>
+        
+        <div class="calendar-stats" id="calendar-stats">
+            <h3>Statistiken</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-posts">0</div>
+                    <div class="stat-label">Gesamte Beiträge</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="active-days">0</div>
+                    <div class="stat-label">Aktive Tage</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="current-streak">0</div>
+                    <div class="stat-label">Aktuelle Serie</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="longest-streak">0</div>
+                    <div class="stat-label">Längste Serie</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        &copy; 2025 Minimal Blog
+    </footer>
+    
+    <script>
+        // Data will be embedded here
+        const blogData = [
+            {
+                "title": "Statusupdate",
+                "date": "09. Juli 2025",
+                "author": "n-km",
+                "category": "Statusupdate",
+                "image": "",
+                "text": "Was sind Statusupdates? - Statusupdates sind Updates von dem laufendem Projekt, der Blog-Website hier. Diese Updates erfolgen wöchentlich variabel. Sie enthalten exklusive Informationen u.a. zum Fortschritt."
+            },
+            {
+                "title": "Neuer Dienst: RSS",
+                "date": "04. Juli 2025",
+                "author": "n-km",
+                "category": "Allgemein",
+                "image": "",
+                "text": "Seit dem 03. Juli 2025 gibt es ein RSS-Feed für diesen Blog. Man kann sagen, dass ein RSS-Feed wie aktuelle Nachrichten sind, die kurz und knapp zu lesen sind. Um diese einzubetten benötigen Sie folgendes: Einen RSS-Reader - Dafür gibt es entweder FreshRSS oder andere RSS-Reader. <br><br> RSS-Feed - Allgemein: <code>https://n-km.github.io/blog/rss.xml</code> <br><br> Viel Spaß beim Lesen!"
+            },
+            {
+                "title": "Mein Portfolio",
+                "date": "03. Juli 2025",
+                "author": "n-km",
+                "category": "Allgemein",
+                "image": "",
+                "text": "Ich habe ein Portfolio auf GitHub, wo man mehrere Bilder sehen und herunterladen kann. Wenn Sie möchten können Sie gerne mal die Webseite besuchen. Diese Webseite habe ich von Grund auf selbst programmiert. Ich hoffe, es gefällt Ihnen. Wenn überhaupt jemand auf diese Seite gelangt xD. <a href='https://n-km.github.io/insta'>https://n-km.github.io/insta</a>"
+            },
+            {
+                "title": "Biene durch das Vintage-Objektiv",
+                "date": "03. Juli 2025",
+                "author": "n-km",
+                "category": "Insekta",
+                "image": "https://live.staticflickr.com/65535/54627969889_590e13ebc1_c.jpg",
+                "text": "Hier habe ich mich wieder letztens mit meinem alten Body (Also die Canon EOS 600D) und dem Pentacon 50mm f/1.8, also ein Vintage-Objektiv, ausprobiert. Mit Erfolg: Mir flog eine Biene auf der gelben Blume und ich konnte sie gut manuell fokussieren und aufnehmen. Das Ergebnis: Den Moment mit einem schönem Bokeh und die Biene mit einer guten Auflösung aufgenommen. [<a href='https://flic.kr/p/2rehCeP'>Zum Flickr-Beitrag...</a>]"
+            },
+            {
+                "title": "Gänseblümchen mit dem Tele",
+                "date": "23. Juni 2025",
+                "author": "n-km",
+                "category": "Pflanzen",
+                "image": "https://live.staticflickr.com/65535/54608212926_aacc6517a0_c.jpg",
+                "text": "An diesem Tag konnte ich mein Teleobjektiv, also das Sony 200-600mm, bei schönem Licht an Pflanzen auch mal ausprobieren. Das Bild besitzt einen schönen Bokeh. An der Schwärfe könnte man nochmal arbeiten, denn nicht alles ist scharf. Dafür muss man dann einfach die Blende etwas mehr schließen. In Zukunft werde ich mich da auf jeden Fall nochmal mehr ausprobieren. Insgesamt finde ich, ist es eine gelungene Aufnahme geworden. [<a href='https://flic.kr/p/2rcxnbw'>Zum Flickr-Beitrag...</a>]"
+            },
+            {
+                "title": "Eine Grille im Gras",
+                "date": "22. Juni 2025",
+                "author": "n-km",
+                "category": "Insekta",
+                "image": "https://live.staticflickr.com/65535/54605874838_d16c785f2e_c.jpg",
+                "text": "Nach langer Zeit mal wieder meine Sony a6700 mit dem Sony 200-600 rausgeholt und mal probiert ein bisschen näher an den kleinen Tieren ranzukommen. Das heißt: In den Garten und auf den Rasen setzten und warten, bis man etwas sieht. Das kann manchmal ewig dauern, wofür ich keine Geduld habe xD. Aber diesmal ging es relativ schnell. Ich konnte Bienen sehen, die man eh häufig sieht. Das Meiste, was man seltener sieht, sind Tiere, die auf dem Boden leben. Denn die können sich ganz leicht im Gras verstecken. Ich hatte also Glück und konnte eine Grille sehen. Das war echt schön, denn ich habe noch nie zuvor eine Grille fotografieren können, weil ich nie eine gesehen habe. In Zukunft werde ich mich auch mehr auf kleinere Dinge konzentrieren. Das schöne am Fotografieren ist: Du kletterst eine Leiter hoch, die nie endet. [<a href='https://flic.kr/p/2rcko9E'>Zum Flickr-Beitrag...</a>]"
+            }
+        ];
+
+        // German month names for parsing
+        const germanMonths = {
+            'Januar': 0, 'Februar': 1, 'März': 2, 'April': 3,
+            'Mai': 4, 'Juni': 5, 'Juli': 6, 'August': 7,
+            'September': 8, 'Oktober': 9, 'November': 10, 'Dezember': 11
+        };
+
+        const germanMonthNames = [
+            'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+        ];
+
+        // Parse German date format "dd. MMMM yyyy"
+        function parseGermanDate(dateString) {
+            const match = dateString.match(/(\d{1,2})\.\s+(\w+)\s+(\d{4})/);
+            if (!match) return null;
+            
+            const [, day, monthName, year] = match;
+            const monthIndex = germanMonths[monthName];
+            
+            if (monthIndex === undefined) return null;
+            
+            return new Date(parseInt(year), monthIndex, parseInt(day));
+        }
+
+        // Get the first Monday of the year (or the last Monday of previous year if year starts mid-week)
+        function getFirstCalendarDate(year) {
+            const firstDay = new Date(year, 0, 1);
+            const dayOfWeek = firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            const mondayOffset = dayOfWeek === 0 ? -6 : -(dayOfWeek - 1);
+            const firstMonday = new Date(year, 0, 1 + mondayOffset);
+            return firstMonday;
+        }
+
+        // Get the last Sunday of the year (or the first Sunday of next year if year ends mid-week)
+        function getLastCalendarDate(year) {
+            const lastDay = new Date(year, 11, 31);
+            const dayOfWeek = lastDay.getDay();
+            const sundayOffset = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+            const lastSunday = new Date(year, 11, 31 + sundayOffset);
+            return lastSunday;
+        }
+
+        // Format date as YYYY-MM-DD for comparison
+        function formatDateKey(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        // Create the calendar
+        function createCalendar() {
+            const year = 2025;
+            const startDate = getFirstCalendarDate(year);
+            const endDate = getLastCalendarDate(year);
+            
+            // Parse blog dates and create a set of active dates
+            const activeDates = new Set();
+            const postCounts = {};
+            
+            blogData.forEach(post => {
+                const date = parseGermanDate(post.date);
+                if (date && date.getFullYear() === year) {
+                    const dateKey = formatDateKey(date);
+                    activeDates.add(dateKey);
+                    postCounts[dateKey] = (postCounts[dateKey] || 0) + 1;
+                }
+            });
+
+            // Generate calendar grid
+            const calendarGrid = document.getElementById('calendar-grid');
+            const calendarMonths = document.getElementById('calendar-months');
+            
+            calendarGrid.innerHTML = '';
+            calendarMonths.innerHTML = '';
+
+            const currentDate = new Date(startDate);
+            const weeks = [];
+            let currentWeek = [];
+            let currentMonth = -1;
+            let monthWidths = [];
+
+            while (currentDate <= endDate) {
+                // Track when we enter a new month for labels
+                if (currentDate.getMonth() !== currentMonth) {
+                    currentMonth = currentDate.getMonth();
+                    if (currentWeek.length > 0) {
+                        // Add remaining days of the month
+                        monthWidths.push(currentWeek.length);
+                    }
+                }
+
+                currentWeek.push(new Date(currentDate));
+
+                // If we've completed a week (Sunday), start a new week
+                if (currentDate.getDay() === 0) {
+                    weeks.push(currentWeek);
+                    currentWeek = [];
+                }
+
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Add any remaining days
+            if (currentWeek.length > 0) {
+                weeks.push(currentWeek);
+            }
+
+            // Create month labels
+            let weekIndex = 0;
+            let lastMonth = -1;
+            weeks.forEach((week, index) => {
+                const firstDayOfWeek = week[0];
+                const month = firstDayOfWeek.getMonth();
+                
+                if (month !== lastMonth) {
+                    const monthLabel = document.createElement('div');
+                    monthLabel.className = 'calendar-month-label';
+                    monthLabel.textContent = germanMonthNames[month];
+                    monthLabel.style.width = `${15 * 4}px`; // Approximate width for 4 weeks
+                    calendarMonths.appendChild(monthLabel);
+                    lastMonth = month;
+                }
+            });
+
+            // Create week columns
+            weeks.forEach(week => {
+                const weekDiv = document.createElement('div');
+                weekDiv.className = 'calendar-week';
+
+                // Create 7 days for the week (Monday to Sunday)
+                for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'calendar-day';
+
+                    const dayDate = week[dayIndex];
+                    if (dayDate) {
+                        const dateKey = formatDateKey(dayDate);
+                        if (activeDates.has(dateKey)) {
+                            dayDiv.classList.add('active');
+                        }
+                        
+                        // Only show days that are actually in the target year
+                        if (dayDate.getFullYear() !== year) {
+                            dayDiv.style.opacity = '0.3';
+                        }
+                    }
+
+                    weekDiv.appendChild(dayDiv);
+                }
+
+                calendarGrid.appendChild(weekDiv);
+            });
+
+            // Update statistics
+            updateStatistics(activeDates, postCounts, year);
+        }
+
+        function updateStatistics(activeDates, postCounts, year) {
+            const totalPosts = Object.values(postCounts).reduce((sum, count) => sum + count, 0);
+            const activeDaysCount = activeDates.size;
+            
+            document.getElementById('total-posts').textContent = totalPosts;
+            document.getElementById('active-days').textContent = activeDaysCount;
+            
+            // Calculate streaks
+            const sortedDates = Array.from(activeDates).sort();
+            let currentStreak = 0;
+            let longestStreak = 0;
+            let tempStreak = 0;
+            
+            const today = new Date();
+            const todayKey = formatDateKey(today);
+            
+            for (let i = 0; i < sortedDates.length; i++) {
+                const currentDate = new Date(sortedDates[i]);
+                const prevDate = i > 0 ? new Date(sortedDates[i - 1]) : null;
+                
+                if (prevDate) {
+                    const dayDiff = (currentDate - prevDate) / (1000 * 60 * 60 * 24);
+                    if (dayDiff === 1) {
+                        tempStreak++;
+                    } else {
+                        longestStreak = Math.max(longestStreak, tempStreak);
+                        tempStreak = 1;
+                    }
+                } else {
+                    tempStreak = 1;
+                }
+            }
+            
+            longestStreak = Math.max(longestStreak, tempStreak);
+            
+            // Calculate current streak (from today backwards)
+            const todayIndex = sortedDates.indexOf(todayKey);
+            if (todayIndex !== -1) {
+                currentStreak = 1;
+                for (let i = todayIndex - 1; i >= 0; i--) {
+                    const currentDate = new Date(sortedDates[i]);
+                    const nextDate = new Date(sortedDates[i + 1]);
+                    const dayDiff = (nextDate - currentDate) / (1000 * 60 * 60 * 24);
+                    if (dayDiff === 1) {
+                        currentStreak++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            document.getElementById('current-streak').textContent = currentStreak;
+            document.getElementById('longest-streak').textContent = longestStreak;
+        }
+
+        // Initialize calendar when page loads
+        document.addEventListener('DOMContentLoaded', createCalendar);
+    </script>
+</body>
+</html>
