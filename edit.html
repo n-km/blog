@@ -93,6 +93,15 @@
         .file-input {
             display: none;
         }
+        .time-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .time-input input {
+            width: 60px !important;
+        }
     </style>
 </head>
 <body>
@@ -110,7 +119,11 @@
     <div id="postFormContainer" class="post-form" style="display: none;">
         <h2>Neuen Post erstellen</h2>
         <input type="text" id="postTitle" placeholder="Titel">
-        <input type="text" id="postDate" placeholder="Datum (z.B. 01. Januar 2025)">
+        <div class="time-input">
+            <input type="text" id="postDate" placeholder="Datum (z.B. 01. Januar 2025)" value="">
+            <span>um</span>
+            <input type="time" id="postTime" value="12:00">
+        </div>
         <input type="text" id="postAuthor" placeholder="Autor" value="n-km">
         <input type="text" id="postCategory" placeholder="Kategorie (z.B. 🌱 Pflanzen)">
         <input type="text" id="postImage" placeholder="Bild-URL (optional)">
@@ -281,6 +294,7 @@
                 editingIndex = -1;
                 document.getElementById('postTitle').value = '';
                 document.getElementById('postDate').value = getCurrentDate();
+                document.getElementById('postTime').value = '12:00';
                 document.getElementById('postAuthor').value = 'n-km';
                 document.getElementById('postCategory').value = '';
                 document.getElementById('postImage').value = '';
@@ -290,9 +304,16 @@
 
             // Post speichern
             savePostBtn.addEventListener('click', function() {
+                const dateStr = document.getElementById('postDate').value;
+                const timeStr = document.getElementById('postTime').value;
+
+                // Kombiniere Datum und Uhrzeit für RSS
+                const rssDate = combineDateTimeForRSS(dateStr, timeStr);
+
                 const post = {
                     title: document.getElementById('postTitle').value,
-                    date: document.getElementById('postDate').value,
+                    date: dateStr, // Nur das Datum für die Anzeige
+                    rssDate: rssDate, // Vollständiges Datum+Uhrzeit für RSS
                     author: document.getElementById('postAuthor').value,
                     category: document.getElementById('postCategory').value,
                     image: document.getElementById('postImage').value,
@@ -356,6 +377,17 @@
 
                         document.getElementById('postTitle').value = post.title;
                         document.getElementById('postDate').value = post.date;
+
+                        // Wenn vorhanden, die gespeicherte RSS-Zeit verwenden
+                        if (post.rssDate) {
+                            const dateObj = new Date(post.rssDate);
+                            const hours = String(dateObj.getHours()).padStart(2, '0');
+                            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                            document.getElementById('postTime').value = `${hours}:${minutes}`;
+                        } else {
+                            document.getElementById('postTime').value = '12:00';
+                        }
+
                         document.getElementById('postAuthor').value = post.author;
                         document.getElementById('postCategory').value = post.category;
                         document.getElementById('postImage').value = post.image || '';
@@ -380,6 +412,29 @@
                 });
             }
 
+            // Kombiniere Datum und Uhrzeit für RSS
+            function combineDateTimeForRSS(dateStr, timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                const m = dateStr.match(/(\d{2})\. (\w+) (\d{4})/);
+
+                if (m) {
+                    const months = {
+                        "Januar": "01","Februar": "02","März": "03","April": "04","Mai": "05","Juni": "06",
+                        "Juli": "07","August": "08","September": "09","Oktober": "10","November": "11","Dezember": "12"
+                    };
+                    const [_, day, monthName, year] = m;
+                    const month = months[monthName] || "01";
+
+                    // Erstelle ein Date-Objekt mit der lokalen Zeit
+                    const date = new Date(`${year}-${month}-${day}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
+
+                    // Konvertiere in UTC und gib RFC822-String zurück
+                    return date.toUTCString();
+                }
+
+                return new Date().toUTCString();
+            }
+
             // RSS generieren Funktion
             function generateRSS(posts) {
                 function escapeXml(str) {
@@ -391,29 +446,18 @@
                         .replace(/'/g, "&apos;");
                 }
 
-                function dateToRFC822(d) {
-                    if (!d) return new Date().toUTCString();
-                    const m = d.match(/(\d{2})\. (\w+) (\d{4})/);
-                    if (m) {
-                        const months = {
-                            "Januar": "01","Februar": "02","März": "03","April": "04","Mai": "05","Juni": "06",
-                            "Juli": "07","August": "08","September": "09","Oktober": "10","November": "11","Dezember": "12"
-                        };
-                        const [_, day, monthName, year] = m;
-                        const month = months[monthName] || "01";
-                        return new Date(`${year}-${month}-${day}T08:00:00+02:00`).toUTCString();
-                    }
-                    return new Date(d).toUTCString();
-                }
-
                 const items = posts.map(post => {
                     if (!post.title) return '';
+
+                    // Verwende rssDate falls vorhanden, sonst versuche das Datum zu parsen
+                    const pubDate = post.rssDate || dateToRFC822(post.date);
+
                     return `
                         <item>
                             <title>${escapeXml(post.title)}</title>
                             <link>https://n-km.github.io/blog/#${encodeURIComponent(post.title.replace(/\s+/g, '-').toLowerCase())}</link>
                             <description><![CDATA[${post.text || ""}${post.image ? `<br><img src="${post.image}">` : ""}]]></description>
-                            <pubDate>${dateToRFC822(post.date)}</pubDate>
+                            <pubDate>${pubDate}</pubDate>
                             <category>${escapeXml(post.category.replace(/[🐝🌱📢]/g, '').trim() || "")}</category>
                             <author>${escapeXml(post.author || "")}</author>
                         </item>
@@ -432,6 +476,22 @@
     ${items}
   </channel>
 </rss>`;
+            }
+
+            // Hilfsfunktion für Datumskonvertierung (für bestehende Posts)
+            function dateToRFC822(d) {
+                if (!d) return new Date().toUTCString();
+                const m = d.match(/(\d{2})\. (\w+) (\d{4})/);
+                if (m) {
+                    const months = {
+                        "Januar": "01","Februar": "02","März": "03","April": "04","Mai": "05","Juni": "06",
+                        "Juli": "07","August": "08","September": "09","Oktober": "10","November": "11","Dezember": "12"
+                    };
+                    const [_, day, monthName, year] = m;
+                    const month = months[monthName] || "01";
+                    return new Date(`${year}-${month}-${day}T12:00:00+02:00`).toUTCString();
+                }
+                return new Date(d).toUTCString();
             }
 
             // Aktuelles Datum im deutschen Format
