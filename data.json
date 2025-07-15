@@ -1,5 +1,14 @@
 [
   {
+    "title": "RSS Uhrzeit hinzugefügt",
+    "date": "15. Juli 2025",
+    "rssDate": "Tue, 15 Jul 2025 10:18:00 GMT",
+    "author": "n-km",
+    "category": "Statusupdate",
+    "image": "",
+    "text": "Es wurde jetzt sowohl im Editor als auch beim RSS die Uhrzeit hinzugefügt.\nDies ermöglicht eine genauere Zeitkontrolle. Es ist nur wichtig, um Ereignisse detaillierter vom Alter zu unterscheiden."
+  },
+  {
     "title": "Neuer Blog Editor",
     "date": "15. Juli 2025",
     "author": "n-km",
