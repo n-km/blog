@@ -6,54 +6,62 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Wed, 09 Jul 2025 06:49:47 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jul 2025 05:48:14 GMT</lastBuildDate>
     <item>
-      <title>Statusupdate</title>
-      <link>https://n-km.github.io/blog/#statusupdate</link>
-      <description><![CDATA[Was sind Statusupdates? - Statusupdates sind Updates von dem laufendem Projekt, der Blog-Website hier. Diese Updates erfolgen wöchentlich variabel. Sie enthalten exklusive Informationen u.a. zum Fortschritt.]]></description>
-      <pubDate>Wed, 09 Jul 2025 06:00:00 GMT</pubDate>
-      <category>Statusupdate</category>
-      <author>n-km</author>
-    </item>
+                            <title>Neuer Blog Editor</title>
+                            <link>https://n-km.github.io/blog/#neuer-blog-editor</link>
+                            <description><![CDATA[Es steht jetzt ein neuer Editor zur Verfügung, womit man die Beiträge lokal bearbeiten kann. Jedoch benötigt man einen localhost, da es sonst nicht funktioniert. Dazu: im Ordner das Terminal öffnen und folgendes eingeben: "python3 -m http.server". Somit sollte ein vollständiger Webserver laufen und es müsste funktionieren. Falls es Fragen gibt, bin ich gerne erreichbar.<br><img src="https://n-km.github.io/blog/media/07-15.png">]]></description>
+                            <pubDate>Tue, 15 Jul 2025 06:00:00 GMT</pubDate>
+                            <category>Statusupdate</category>
+                            <author>n-km</author>
+                        </item>
 <item>
-      <title>Neuer Dienst: RSS</title>
-      <link>https://n-km.github.io/blog/#neuer-dienst%3A-rss</link>
-      <description><![CDATA[Seit dem 03. Juli 2025 gibt es ein RSS-Feed für diesen Blog. Man kann sagen, dass ein RSS-Feed wie aktuelle Nachrichten sind, die kurz und knapp zu lesen sind. Um diese einzubetten benötigen Sie folgendes: Einen RSS-Reader - Dafür gibt es entweder FreshRSS oder andere RSS-Reader. <br><br> RSS-Feed - Allgemein: <code>https://n-km.github.io/blog/rss.xml</code> <br><br> Viel Spaß beim Lesen!]]></description>
-      <pubDate>Fri, 04 Jul 2025 06:00:00 GMT</pubDate>
-      <category>Allgemein</category>
-      <author>n-km</author>
-    </item>
+                            <title>Statusupdate</title>
+                            <link>https://n-km.github.io/blog/#statusupdate</link>
+                            <description><![CDATA[Was sind Statusupdates? - Statusupdates sind Updates von dem laufendem Projekt, der Blog-Website hier. Diese Updates erfolgen wöchentlich variabel. Sie enthalten exklusive Informationen u.a. zum Fortschritt.]]></description>
+                            <pubDate>Wed, 09 Jul 2025 06:00:00 GMT</pubDate>
+                            <category>Statusupdate</category>
+                            <author>n-km</author>
+                        </item>
 <item>
-      <title>Mein Portfolio</title>
-      <link>https://n-km.github.io/blog/#mein-portfolio</link>
-      <description><![CDATA[Ich habe ein Portfolio auf GitHub, wo man mehrere Bilder sehen und herunterladen kann. Wenn Sie möchten können Sie gerne mal die Webseite besuchen. Diese Webseite habe ich von Grund auf selbst programmiert. Ich hoffe, es gefällt Ihnen. Wenn überhaupt jemand auf diese Seite gelangt xD. <a href='https://n-km.github.io/insta'>https://n-km.github.io/insta</a>]]></description>
-      <pubDate>Thu, 03 Jul 2025 06:00:00 GMT</pubDate>
-      <category>Allgemein</category>
-      <author>n-km</author>
-    </item>
+                            <title>Neuer Dienst: RSS</title>
+                            <link>https://n-km.github.io/blog/#neuer-dienst%3A-rss</link>
+                            <description><![CDATA[Seit dem 03. Juli 2025 gibt es ein RSS-Feed für diesen Blog. Man kann sagen, dass ein RSS-Feed wie aktuelle Nachrichten sind, die kurz und knapp zu lesen sind. Um diese einzubetten benötigen Sie folgendes: Einen RSS-Reader - Dafür gibt es entweder FreshRSS oder andere RSS-Reader. <br><br> RSS-Feed - Allgemein: <code>https://n-km.github.io/blog/rss.xml</code> <br><br> Viel Spaß beim Lesen!]]></description>
+                            <pubDate>Fri, 04 Jul 2025 06:00:00 GMT</pubDate>
+                            <category>Allgemein</category>
+                            <author>n-km</author>
+                        </item>
 <item>
-      <title>Biene durch das Vintage-Objektiv</title>
-      <link>https://n-km.github.io/blog/#biene-durch-das-vintage-objektiv</link>
-      <description><![CDATA[Hier habe ich mich wieder letztens mit meinem alten Body (Also die Canon EOS 600D) und dem Pentacon 50mm f/1.8, also ein Vintage-Objektiv, ausprobiert. Mit Erfolg: Mir flog eine Biene auf der gelben Blume und ich konnte sie gut manuell fokussieren und aufnehmen. Das Ergebnis: Den Moment mit einem schönem Bokeh und die Biene mit einer guten Auflösung aufgenommen. [<a href='https://flic.kr/p/2rehCeP'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54627969889_590e13ebc1_c.jpg">]]></description>
-      <pubDate>Thu, 03 Jul 2025 06:00:00 GMT</pubDate>
-      <category>Insekta</category>
-      <author>n-km</author>
-    </item>
+                            <title>Mein Portfolio</title>
+                            <link>https://n-km.github.io/blog/#mein-portfolio</link>
+                            <description><![CDATA[Ich habe ein Portfolio auf GitHub, wo man mehrere Bilder sehen und herunterladen kann. Wenn Sie möchten können Sie gerne mal die Webseite besuchen. Diese Webseite habe ich von Grund auf selbst programmiert. Ich hoffe, es gefällt Ihnen. Wenn überhaupt jemand auf diese Seite gelangt xD. <a href='https://n-km.github.io/insta'>https://n-km.github.io/insta</a>]]></description>
+                            <pubDate>Thu, 03 Jul 2025 06:00:00 GMT</pubDate>
+                            <category>Allgemein</category>
+                            <author>n-km</author>
+                        </item>
 <item>
-      <title>Gänseblümchen mit dem Tele</title>
-      <link>https://n-km.github.io/blog/#g%C3%A4nsebl%C3%BCmchen-mit-dem-tele</link>
-      <description><![CDATA[An diesem Tag konnte ich mein Teleobjektiv, also das Sony 200-600mm, bei schönem Licht an Pflanzen auch mal ausprobieren. Das Bild besitzt einen schönen Bokeh. An der Schwärfe könnte man nochmal arbeiten, denn nicht alles ist scharf. Dafür muss man dann einfach die Blende etwas mehr schließen. In Zukunft werde ich mich da auf jeden Fall nochmal mehr ausprobieren. Insgesamt finde ich, ist es eine gelungene Aufnahme geworden. [<a href='https://flic.kr/p/2rcxnbw'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54608212926_aacc6517a0_c.jpg">]]></description>
-      <pubDate>Mon, 23 Jun 2025 06:00:00 GMT</pubDate>
-      <category>Pflanzen</category>
-      <author>n-km</author>
-    </item>
+                            <title>Biene durch das Vintage-Objektiv</title>
+                            <link>https://n-km.github.io/blog/#biene-durch-das-vintage-objektiv</link>
+                            <description><![CDATA[Hier habe ich mich wieder letztens mit meinem alten Body (Also die Canon EOS 600D) und dem Pentacon 50mm f/1.8, also ein Vintage-Objektiv, ausprobiert. Mit Erfolg: Mir flog eine Biene auf der gelben Blume und ich konnte sie gut manuell fokussieren und aufnehmen. Das Ergebnis: Den Moment mit einem schönem Bokeh und die Biene mit einer guten Auflösung aufgenommen. [<a href='https://flic.kr/p/2rehCeP'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54627969889_590e13ebc1_c.jpg">]]></description>
+                            <pubDate>Thu, 03 Jul 2025 06:00:00 GMT</pubDate>
+                            <category>Insekta</category>
+                            <author>n-km</author>
+                        </item>
 <item>
-      <title>Eine Grille im Gras</title>
-      <link>https://n-km.github.io/blog/#eine-grille-im-gras</link>
-      <description><![CDATA[Nach langer Zeit mal wieder meine Sony a6700 mit dem Sony 200-600 rausgeholt und mal probiert ein bisschen näher an den kleinen Tieren ranzukommen. Das heißt: In den Garten und auf den Rasen setzten und warten, bis man etwas sieht. Das kann manchmal ewig dauern, wofür ich keine Geduld habe xD. Aber diesmal ging es relativ schnell. Ich konnte Bienen sehen, die man eh häufig sieht. Das Meiste, was man seltener sieht, sind Tiere, die auf dem Boden leben. Denn die können sich ganz leicht im Gras verstecken. Ich hatte also Glück und konnte eine Grille sehen. Das war echt schön, denn ich habe noch nie zuvor eine Grille fotografieren können, weil ich nie eine gesehen habe. In Zukunft werde ich mich auch mehr auf kleinere Dinge konzentrieren. Das schöne am Fotografieren ist: Du kletterst eine Leiter hoch, die nie endet. [<a href='https://flic.kr/p/2rcko9E'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54605874838_d16c785f2e_c.jpg">]]></description>
-      <pubDate>Sun, 22 Jun 2025 06:00:00 GMT</pubDate>
-      <category>Insekta</category>
-      <author>n-km</author>
-    </item>
+                            <title>Gänseblümchen mit dem Tele</title>
+                            <link>https://n-km.github.io/blog/#g%C3%A4nsebl%C3%BCmchen-mit-dem-tele</link>
+                            <description><![CDATA[An diesem Tag konnte ich mein Teleobjektiv, also das Sony 200-600mm, bei schönem Licht an Pflanzen auch mal ausprobieren. Das Bild besitzt einen schönen Bokeh. An der Schwärfe könnte man nochmal arbeiten, denn nicht alles ist scharf. Dafür muss man dann einfach die Blende etwas mehr schließen. In Zukunft werde ich mich da auf jeden Fall nochmal mehr ausprobieren. Insgesamt finde ich, ist es eine gelungene Aufnahme geworden. [<a href='https://flic.kr/p/2rcxnbw'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54608212926_aacc6517a0_c.jpg">]]></description>
+                            <pubDate>Mon, 23 Jun 2025 06:00:00 GMT</pubDate>
+                            <category>Pflanzen</category>
+                            <author>n-km</author>
+                        </item>
+<item>
+                            <title>Eine Grille im Gras</title>
+                            <link>https://n-km.github.io/blog/#eine-grille-im-gras</link>
+                            <description><![CDATA[Nach langer Zeit mal wieder meine Sony a6700 mit dem Sony 200-600 rausgeholt und mal probiert ein bisschen näher an den kleinen Tieren ranzukommen. Das heißt: In den Garten und auf den Rasen setzten und warten, bis man etwas sieht. Das kann manchmal ewig dauern, wofür ich keine Geduld habe xD. Aber diesmal ging es relativ schnell. Ich konnte Bienen sehen, die man eh häufig sieht. Das Meiste, was man seltener sieht, sind Tiere, die auf dem Boden leben. Denn die können sich ganz leicht im Gras verstecken. Ich hatte also Glück und konnte eine Grille sehen. Das war echt schön, denn ich habe noch nie zuvor eine Grille fotografieren können, weil ich nie eine gesehen habe. In Zukunft werde ich mich auch mehr auf kleinere Dinge konzentrieren. Das schöne am Fotografieren ist: Du kletterst eine Leiter hoch, die nie endet. [<a href='https://flic.kr/p/2rcko9E'>Zum Flickr-Beitrag...</a>]<br><img src="https://live.staticflickr.com/65535/54605874838_d16c785f2e_c.jpg">]]></description>
+                            <pubDate>Sun, 22 Jun 2025 06:00:00 GMT</pubDate>
+                            <category>Insekta</category>
+                            <author>n-km</author>
+                        </item>
   </channel>
 </rss>

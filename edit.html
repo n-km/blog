@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Editor</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2 {
+            color: #1d1d1f;
+        }
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #0062c3;
+        }
+        .actions {
+            margin: 20px 0;
+        }
+        .preview {
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            background: #f8f8f8;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .success {
+            color: #28a745;
+            margin: 10px 0;
+        }
+        .error {
+            color: #dc3545;
+            margin: 10px 0;
+        }
+        .post-form {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .post-form input, .post-form textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .posts-list {
+            margin-top: 30px;
+        }
+        .post-item {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .post-item button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Blog Editor</h1>
+
+    <div class="actions">
+        <button id="loadData">Daten laden</button>
+        <input type="file" id="fileInput" class="file-input" accept=".json">
+        <button id="importData">Importieren</button>
+        <button id="saveData">Daten speichern</button>
+        <button id="generateRSS">RSS generieren</button>
+        <button id="addPost">Neuen Post hinzufügen</button>
+    </div>
+
+    <div id="postFormContainer" class="post-form" style="display: none;">
+        <h2>Neuen Post erstellen</h2>
+        <input type="text" id="postTitle" placeholder="Titel">
+        <input type="text" id="postDate" placeholder="Datum (z.B. 01. Januar 2025)">
+        <input type="text" id="postAuthor" placeholder="Autor" value="n-km">
+        <input type="text" id="postCategory" placeholder="Kategorie (z.B. 🌱 Pflanzen)">
+        <input type="text" id="postImage" placeholder="Bild-URL (optional)">
+        <textarea id="postText" placeholder="Text (HTML erlaubt)"></textarea>
+        <button id="savePost">Post speichern</button>
+        <button id="cancelPost">Abbrechen</button>
+    </div>
+
+    <div id="postsList" class="posts-list"></div>
+
+    <textarea id="jsonData" placeholder="JSON-Daten werden hier angezeigt..."></textarea>
+
+    <div id="rssPreview" class="preview" style="display: none;">
+        <h2>RSS Vorschau</h2>
+        <div id="rssContent"></div>
+        <button id="downloadRSS">RSS herunterladen</button>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jsonData = document.getElementById('jsonData');
+            const loadDataBtn = document.getElementById('loadData');
+            const importDataBtn = document.getElementById('importData');
+            const fileInput = document.getElementById('fileInput');
+            const saveDataBtn = document.getElementById('saveData');
+            const generateRSSBtn = document.getElementById('generateRSS');
+            const addPostBtn = document.getElementById('addPost');
+            const postFormContainer = document.getElementById('postFormContainer');
+            const savePostBtn = document.getElementById('savePost');
+            const cancelPostBtn = document.getElementById('cancelPost');
+            const postsList = document.getElementById('postsList');
+            const rssPreview = document.getElementById('rssPreview');
+            const rssContent = document.getElementById('rssContent');
+            const downloadRSSBtn = document.getElementById('downloadRSS');
+            const messageDiv = document.getElementById('message');
+
+            const LOCAL_STORAGE_KEY = 'blog_posts_data';
+            let currentPosts = [];
+            let editingIndex = -1;
+
+            // Initial Daten laden
+            function init() {
+                // Versuche, Daten aus localStorage zu laden
+                const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (savedData) {
+                    try {
+                        currentPosts = JSON.parse(savedData);
+                        jsonData.value = JSON.stringify(currentPosts, null, 2);
+                        renderPostsList();
+                        showMessage('Daten aus dem Browserspeicher geladen', 'success');
+                    } catch (e) {
+                        showMessage('Fehler beim Laden der gespeicherten Daten', 'error');
+                    }
+                }
+
+                // Versuche, data.json zu laden
+                loadDataFromFile();
+            }
+
+            // Daten aus data.json laden
+            function loadDataFromFile() {
+                fetch('data.json')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Datei nicht gefunden');
+                        return response.json();
+                    })
+                    .then(data => {
+                        currentPosts = data;
+                        jsonData.value = JSON.stringify(data, null, 2);
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                        renderPostsList();
+                        showMessage('Daten erfolgreich aus data.json geladen', 'success');
+                    })
+                    .catch(error => {
+                        console.log('data.json nicht gefunden oder Fehler beim Laden:', error);
+                    });
+            }
+
+            // Daten laden Button
+            loadDataBtn.addEventListener('click', loadDataFromFile);
+
+            // Daten importieren
+            importDataBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        currentPosts = data;
+                        jsonData.value = JSON.stringify(data, null, 2);
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                        renderPostsList();
+                        showMessage('Daten erfolgreich importiert', 'success');
+                    } catch (error) {
+                        showMessage('Fehler beim Parsen der JSON-Datei: ' + error, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Daten speichern
+            saveDataBtn.addEventListener('click', function() {
+                try {
+                    const data = JSON.parse(jsonData.value);
+                    currentPosts = data;
+                    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+
+                    // Erstelle einen Blob mit den Daten
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+
+                    // Erstelle einen Download-Link
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'data.json';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    showMessage('Daten erfolgreich gespeichert und als data.json heruntergeladen', 'success');
+                    renderPostsList();
+                } catch (error) {
+                    showMessage('Fehler beim Parsen der JSON-Daten: ' + error, 'error');
+                }
+            });
+
+            // RSS generieren
+            generateRSSBtn.addEventListener('click', function() {
+                try {
+                    const data = currentPosts.length > 0 ? currentPosts : JSON.parse(jsonData.value);
+                    const rss = generateRSS(data);
+                    rssContent.textContent = rss;
+                    rssPreview.style.display = 'block';
+                    showMessage('RSS erfolgreich generiert', 'success');
+                } catch (error) {
+                    showMessage('Fehler beim Generieren des RSS-Feeds: ' + error, 'error');
+                }
+            });
+
+            // RSS herunterladen
+            downloadRSSBtn.addEventListener('click', function() {
+                const rss = rssContent.textContent;
+                const blob = new Blob([rss], { type: 'application/xml' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'rss.xml';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showMessage('RSS erfolgreich als rss.xml heruntergeladen', 'success');
+            });
+
+            // Post hinzufügen Formular anzeigen
+            addPostBtn.addEventListener('click', function() {
+                editingIndex = -1;
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postDate').value = getCurrentDate();
+                document.getElementById('postAuthor').value = 'n-km';
+                document.getElementById('postCategory').value = '';
+                document.getElementById('postImage').value = '';
+                document.getElementById('postText').value = '';
+                postFormContainer.style.display = 'block';
+            });
+
+            // Post speichern
+            savePostBtn.addEventListener('click', function() {
+                const post = {
+                    title: document.getElementById('postTitle').value,
+                    date: document.getElementById('postDate').value,
+                    author: document.getElementById('postAuthor').value,
+                    category: document.getElementById('postCategory').value,
+                    image: document.getElementById('postImage').value,
+                    text: document.getElementById('postText').value
+                };
+
+                if (!post.title || !post.date || !post.author || !post.category || !post.text) {
+                    showMessage('Bitte füllen Sie alle erforderlichen Felder aus', 'error');
+                    return;
+                }
+
+                if (editingIndex === -1) {
+                    currentPosts.unshift(post); // Neuen Post am Anfang einfügen
+                } else {
+                    currentPosts[editingIndex] = post; // Existierenden Post aktualisieren
+                }
+
+                jsonData.value = JSON.stringify(currentPosts, null, 2);
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentPosts));
+                postFormContainer.style.display = 'none';
+                renderPostsList();
+                showMessage('Post erfolgreich gespeichert', 'success');
+            });
+
+            // Post bearbeiten abbrechen
+            cancelPostBtn.addEventListener('click', function() {
+                postFormContainer.style.display = 'none';
+            });
+
+            // Posts Liste rendern
+            function renderPostsList() {
+                postsList.innerHTML = '<h2>Posts</h2>';
+
+                if (currentPosts.length === 0) {
+                    postsList.innerHTML += '<p>Keine Posts vorhanden</p>';
+                    return;
+                }
+
+                currentPosts.forEach((post, index) => {
+                    const postItem = document.createElement('div');
+                    postItem.className = 'post-item';
+
+                    let html = `<h3>${post.title}</h3>`;
+                    html += `<p><strong>Datum:</strong> ${post.date}</p>`;
+                    html += `<p><strong>Kategorie:</strong> ${post.category}</p>`;
+                    if (post.image) {
+                        html += `<p><strong>Bild:</strong> ${post.image}</p>`;
+                    }
+                    html += `<button class="edit-post" data-index="${index}">Bearbeiten</button>`;
+                    html += `<button class="delete-post" data-index="${index}">Löschen</button>`;
+
+                    postItem.innerHTML = html;
+                    postsList.appendChild(postItem);
+                });
+
+                // Bearbeiten-Buttons
+                document.querySelectorAll('.edit-post').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        editingIndex = parseInt(this.dataset.index);
+                        const post = currentPosts[editingIndex];
+
+                        document.getElementById('postTitle').value = post.title;
+                        document.getElementById('postDate').value = post.date;
+                        document.getElementById('postAuthor').value = post.author;
+                        document.getElementById('postCategory').value = post.category;
+                        document.getElementById('postImage').value = post.image || '';
+                        document.getElementById('postText').value = post.text;
+
+                        postFormContainer.style.display = 'block';
+                    });
+                });
+
+                // Löschen-Buttons
+                document.querySelectorAll('.delete-post').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        if (confirm('Möchten Sie diesen Post wirklich löschen?')) {
+                            currentPosts.splice(index, 1);
+                            jsonData.value = JSON.stringify(currentPosts, null, 2);
+                            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentPosts));
+                            renderPostsList();
+                            showMessage('Post erfolgreich gelöscht', 'success');
+                        }
+                    });
+                });
+            }
+
+            // RSS generieren Funktion
+            function generateRSS(posts) {
+                function escapeXml(str) {
+                    return (str || "")
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&apos;");
+                }
+
+                function dateToRFC822(d) {
+                    if (!d) return new Date().toUTCString();
+                    const m = d.match(/(\d{2})\. (\w+) (\d{4})/);
+                    if (m) {
+                        const months = {
+                            "Januar": "01","Februar": "02","März": "03","April": "04","Mai": "05","Juni": "06",
+                            "Juli": "07","August": "08","September": "09","Oktober": "10","November": "11","Dezember": "12"
+                        };
+                        const [_, day, monthName, year] = m;
+                        const month = months[monthName] || "01";
+                        return new Date(`${year}-${month}-${day}T08:00:00+02:00`).toUTCString();
+                    }
+                    return new Date(d).toUTCString();
+                }
+
+                const items = posts.map(post => {
+                    if (!post.title) return '';
+                    return `
+                        <item>
+                            <title>${escapeXml(post.title)}</title>
+                            <link>https://n-km.github.io/blog/#${encodeURIComponent(post.title.replace(/\s+/g, '-').toLowerCase())}</link>
+                            <description><![CDATA[${post.text || ""}${post.image ? `<br><img src="${post.image}">` : ""}]]></description>
+                            <pubDate>${dateToRFC822(post.date)}</pubDate>
+                            <category>${escapeXml(post.category.replace(/[🐝🌱📢]/g, '').trim() || "")}</category>
+                            <author>${escapeXml(post.author || "")}</author>
+                        </item>
+                    `.trim();
+                }).join('\n');
+
+                return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Minimal Blog | n-km</title>
+    <link>https://n-km.github.io/blog/</link>
+    <description>RSS-Feed aus data.json</description>
+    <language>de-de</language>
+    <generator>generate-rss.js</generator>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    ${items}
+  </channel>
+</rss>`;
+            }
+
+            // Aktuelles Datum im deutschen Format
+            function getCurrentDate() {
+                const now = new Date();
+                const months = [
+                    "Januar", "Februar", "März", "April", "Mai", "Juni",
+                    "Juli", "August", "September", "Oktober", "November", "Dezember"
+                ];
+                const day = now.getDate().toString().padStart(2, '0');
+                const month = months[now.getMonth()];
+                const year = now.getFullYear();
+                return `${day}. ${month} ${year}`;
+            }
+
+            // Nachricht anzeigen
+            function showMessage(msg, type) {
+                messageDiv.textContent = msg;
+                messageDiv.className = type;
+                setTimeout(() => {
+                    messageDiv.textContent = '';
+                    messageDiv.className = '';
+                }, 3000);
+            }
+
+            // Initialisierung
+            init();
+        });
+    </script>
+</body>
+</html>
