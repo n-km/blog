@@ -4,7 +4,7 @@
     "date": "15. Juli 2025",
     "author": "n-km",
     "category": "Statusupdate",
-    "image": "https://n-km.github.io/blog/media/07-15.png",
+    "image": "https://n-km.github.io/blog/images/07-15.png",
     "text": "Es steht jetzt ein neuer Editor zur Verfügung, womit man die Beiträge lokal bearbeiten kann. Jedoch benötigt man einen localhost, da es sonst nicht funktioniert. Dazu: im Ordner das Terminal öffnen und folgendes eingeben: \"python3 -m http.server\". Somit sollte ein vollständiger Webserver laufen und es müsste funktionieren. Falls es Fragen gibt, bin ich gerne erreichbar."
   },
   {

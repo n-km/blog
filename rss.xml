@@ -6,11 +6,11 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Tue, 15 Jul 2025 05:48:14 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jul 2025 06:00:16 GMT</lastBuildDate>
     <item>
                             <title>Neuer Blog Editor</title>
                             <link>https://n-km.github.io/blog/#neuer-blog-editor</link>
-                            <description><![CDATA[Es steht jetzt ein neuer Editor zur Verfügung, womit man die Beiträge lokal bearbeiten kann. Jedoch benötigt man einen localhost, da es sonst nicht funktioniert. Dazu: im Ordner das Terminal öffnen und folgendes eingeben: "python3 -m http.server". Somit sollte ein vollständiger Webserver laufen und es müsste funktionieren. Falls es Fragen gibt, bin ich gerne erreichbar.<br><img src="https://n-km.github.io/blog/media/07-15.png">]]></description>
+                            <description><![CDATA[Es steht jetzt ein neuer Editor zur Verfügung, womit man die Beiträge lokal bearbeiten kann. Jedoch benötigt man einen localhost, da es sonst nicht funktioniert. Dazu: im Ordner das Terminal öffnen und folgendes eingeben: "python3 -m http.server". Somit sollte ein vollständiger Webserver laufen und es müsste funktionieren. Falls es Fragen gibt, bin ich gerne erreichbar.<br><img src="https://n-km.github.io/blog/images/07-15.png">]]></description>
                             <pubDate>Tue, 15 Jul 2025 06:00:00 GMT</pubDate>
                             <category>Statusupdate</category>
                             <author>n-km</author>
