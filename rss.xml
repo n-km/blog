@@ -6,8 +6,17 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Tue, 15 Jul 2025 10:25:57 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 16 Jul 2025 11:41:53 GMT</lastBuildDate>
     <item>
+                            <title>Icon Hinzugefügt</title>
+                            <link>https://n-km.github.io/blog/#icon-hinzugef%C3%BCgt</link>
+                            <description><![CDATA[Vorübergehend ist jetzt auch ein Icon der Webseite verfügbar. Dieses wird sich jedoch in kürze ändern, da dies aus dem Internet entnommen wurde. Der jeweilige Link ist in der ./images/LINKS.MD - Datei enthalten. Wie gesagt, es ist nur temporär. Die Produktion des eigenen Icons wird demnächst anstehen. 
+Momentan kommen viele Statusupdates rein. Im Verlaufe der Zeit wird es weniger werden. Momentan befinden wir uns in der Entwicklungsphase, was der Grund dafür ist. Für Verbesserungsvorschläge, sei es das Design oder das Benutzererlebnis, stehen wir jederzeit unter dem Tab "Kontakt" zur Verfügung.]]></description>
+                            <pubDate>Wed, 16 Jul 2025 11:37:00 GMT</pubDate>
+                            <category>Statusupdate</category>
+                            <author>n-km</author>
+                        </item>
+<item>
                             <title>RSS Uhrzeit hinzugefügt</title>
                             <link>https://n-km.github.io/blog/#rss-uhrzeit-hinzugef%C3%BCgt</link>
                             <description><![CDATA[Es wurde jetzt sowohl im Editor als auch beim RSS die Uhrzeit hinzugefügt.
