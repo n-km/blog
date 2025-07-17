@@ -6,8 +6,16 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Wed, 16 Jul 2025 11:41:53 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 17 Jul 2025 09:56:12 GMT</lastBuildDate>
     <item>
+                            <title>Designänderung des Blog Editors</title>
+                            <link>https://n-km.github.io/blog/#design%C3%A4nderung-des-blog-editors</link>
+                            <description><![CDATA[Das Design des Blog Editors hat sich geändert. Das Benutzererlebnis hat sich dadurch verbessert. Jedoch sind die Farben monotom - also grau. Der Editor kann gerne ausprobiert werden unter folgendem Link: <a href="https://n-km.github.io/blog/edit-v">https://n-km.github.io/blog/edit-v.html</a>. Wie gesagt: Falls Verbesserungsvorschläge bestehen: Gerne unter dem Tab "Kontakt" an die E-Mail Adresse melden. ]]></description>
+                            <pubDate>Thu, 17 Jul 2025 09:52:00 GMT</pubDate>
+                            <category>Statusupdate</category>
+                            <author>n-km</author>
+                        </item>
+<item>
                             <title>Icon Hinzugefügt</title>
                             <link>https://n-km.github.io/blog/#icon-hinzugef%C3%BCgt</link>
                             <description><![CDATA[Vorübergehend ist jetzt auch ein Icon der Webseite verfügbar. Dieses wird sich jedoch in kürze ändern, da dies aus dem Internet entnommen wurde. Der jeweilige Link ist in der ./images/LINKS.MD - Datei enthalten. Wie gesagt, es ist nur temporär. Die Produktion des eigenen Icons wird demnächst anstehen. 
