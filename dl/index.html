@@ -18,6 +18,8 @@
         --shadow: 0 4px 16px 0 rgba(0,0,0,0.04), 0 1.5px 6px 0 rgba(0,0,0,0.08);
         --radius: 0px;
         --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --code-bg: #2d2d2d;
+        --code-text: #f8f8f8;
     }
     * {
         box-sizing: border-box;
@@ -211,6 +213,68 @@
         outline: 2.5px solid var(--primary);
         outline-offset: 1.5px;
     }
+    
+    /* Neue Styles für Git-Box */
+    .git-box {
+        margin-top: 2rem;
+        width: 100%;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .git-label {
+        display: block;
+        text-align: left;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #555;
+        font-weight: 500;
+    }
+    .git-command {
+        display: flex;
+        align-items: center;
+        background: var(--code-bg);
+        color: var(--code-text);
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.95rem;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .git-command-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .git-copy-btn {
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        margin-left: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .git-copy-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+    .git-copy-btn.copied {
+        background: #4CAF50;
+    }
+    .git-hint {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: #888;
+        text-align: left;
+    }
+    
     /* ---- Responsiveness ---- */
     @media (max-width: 768px) {
         .hero h2 {
@@ -236,6 +300,9 @@
             width: 100%;
             max-width: 250px;
         }
+        .git-command {
+            font-size: 0.85rem;
+        }
     }
     </style>
 </head>
@@ -255,7 +322,18 @@
             <div class="cta-buttons">
                 <a href="https://n-km.github.io/blog/" class="btn btn-primary" target="_blank">Live Demo ansehen</a>
                 <a href="#download" class="btn btn-secondary">Jetzt herunterladen</a>
-              <textarea style="resize: none; border-radius: 3px; border-style: solid; font-size: 1rem; width: 100%; background-color: #202020; color: white; text-shadow: 1px 1px 4px white;">git clone https://github.com/n-km/blog.git</textarea>
+            </div>
+            
+            <div class="git-box">
+                <span class="git-label">Mit Git installieren:</span>
+                <div class="git-command">
+                    <span class="git-command-text">git clone https://github.com/n-km/blog.git</span>
+                    <button class="git-copy-btn" onclick="copyGitCommand()">
+                        <span class="copy-text">Kopieren</span>
+                        <span class="checkmark" style="display: none;">✓</span>
+                    </button>
+                </div>
+                <p class="git-hint">Kopiere den Befehl und führe ihn in deinem Terminal aus</p>
             </div>
         </section>
 
@@ -352,6 +430,28 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+    
+    function copyGitCommand() {
+        const command = 'git clone https://github.com/n-km/blog.git';
+        navigator.clipboard.writeText(command).then(() => {
+            const btn = document.querySelector('.git-copy-btn');
+            const copyText = btn.querySelector('.copy-text');
+            const checkmark = btn.querySelector('.checkmark');
+            
+            copyText.style.display = 'none';
+            checkmark.style.display = 'inline';
+            btn.classList.add('copied');
+            
+            setTimeout(() => {
+                copyText.style.display = 'inline';
+                checkmark.style.display = 'none';
+                btn.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Fehler beim Kopieren: ', err);
+            alert('Kopieren fehlgeschlagen. Bitte manuell kopieren.');
+        });
     }
     </script>
 </body>
