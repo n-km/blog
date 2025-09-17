@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://n-km.github.io/blog/images/mb2.webp">
+    <title>Minimal Blog - Landing Page</title>
+    <style>
+    :root {
+        --main-bg: #f8f8f8;
+        --main-text: #1d1d1f;
+        --primary: #0071e3;      /* Tabs und Navigation */
+        --primary-hover: #0062c3; /* Primärfarbe beim Hover */
+        --cat-bg: #e5eefb;       /* Kategorie-Hintergrund, weniger kontrastreich */
+        --cat-text: #1963a6;     /* Kategorie-Text */
+        --gray: #f2f2f7;
+        --white: #fff;
+        --shadow: 0 4px 16px 0 rgba(0,0,0,0.04), 0 1.5px 6px 0 rgba(0,0,0,0.08);
+        --radius: 0px;
+        --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    html, body {
+        min-height: 100%;
+        background: var(--main-bg);
+    }
+    body {
+        font-family: var(--font-main);
+        color: var(--main-text);
+        line-height: 1.7;
+        display: flex;
+        flex-direction: column;
+    }
+    header {
+        padding: 1rem 0 1.2rem 0;
+        text-align: center;
+        background: var(--white);
+        border-width: 0px 0px 3px 0px;
+        border-style: solid;
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    header h1 {
+        font-size: 2.2rem;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--main-text);
+        font-family: var(--font-main);
+    }
+    nav {
+        margin-top: 0.7rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.1rem;
+        flex-wrap: wrap;
+    }
+    nav button {
+        background: none;
+        border: none;
+        color: var(--main-text);
+        font-size: 1.07rem;
+        font-weight: 500;
+        padding: 0.3em 1.1em;
+        border-radius: 7px;
+        transition: background 0.17s, color 0.17s;
+        cursor: pointer;
+        outline: none;
+    }
+    nav button.active,
+    nav button:hover,
+    nav button:focus {
+        background: var(--primary);
+        color: var(--white);
+        text-decoration: none;
+    }
+    main {
+        width: 100%;
+        max-width: 800px;
+        margin: 2.2rem auto 2rem auto;
+        flex: 1 0 auto;
+        padding: 0 1.1rem;
+    }
+    .hero {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        margin-bottom: 2.5rem;
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+    }
+    .hero h2 {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    .hero p {
+        font-size: 1.2rem;
+        color: #555;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+    }
+    .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+    .btn {
+        display: inline-block;
+        padding: 0.8rem 1.8rem;
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+    }
+    .btn-primary {
+        background: var(--primary);
+        color: var(--white);
+    }
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 113, 227, 0.25);
+    }
+    .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+    }
+    .btn-secondary:hover {
+        background: rgba(0, 113, 227, 0.05);
+        transform: translateY(-2px);
+    }
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 3rem 0;
+    }
+    .feature {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        text-align: center;
+    }
+    .feature h3 {
+        margin-bottom: 1rem;
+        color: var(--primary);
+    }
+    .download-section {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin: 2rem 0;
+        text-align: center;
+    }
+    .download-options {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    .download-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: var(--main-text);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.2s;
+        min-width: 120px;
+    }
+    .download-btn:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+        transform: translateY(-3px);
+    }
+    .download-btn i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+    }
+    footer {
+        background: var(--white);
+        text-align: center;
+        font-size: 1.02rem;
+        padding: 1.1rem 0 1.3rem 0;
+        color: #86868b;
+        margin-top: auto;
+        box-shadow: 0 -2px 8px 0 rgba(0,0,0,0.03);
+    }
+    /* Apple-style focus ring */
+    button:focus-visible, select:focus-visible, a:focus-visible {
+        outline: 2.5px solid var(--primary);
+        outline-offset: 1.5px;
+    }
+    /* ---- Responsiveness ---- */
+    @media (max-width: 768px) {
+        .hero h2 {
+            font-size: 1.8rem;
+        }
+        .hero p {
+            font-size: 1.1rem;
+        }
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .download-options {
+            flex-direction: column;
+            align-items: center;
+        }
+        .download-btn {
+            width: 100%;
+            max-width: 250px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Minimal Blog</h1>
+        <nav>
+            <button class="active">Home</button>
+            <button onclick="scrollToSection('features')">Features</button>
+            <button onclick="scrollToSection('download')">Download</button>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Ein minimalistischer Blog im Apple-Design</h2>
+            <p>Elegant, schlicht und funktional - präsentiere Ihre Inhalte mit Stil und Klarheit auf allen Geräten.</p>
+            <div class="cta-buttons">
+                <a href="https://n-km.github.io/blog/" class="btn btn-primary" target="_blank">Live Demo ansehen</a>
+                <a href="#download" class="btn btn-secondary">Jetzt herunterladen</a>
+              <textarea>git clone https://github.com/n-km/blog.git</textarea>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Warum Minimal Blog wählen?</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>🍎 Apple-Design</h3>
+                    <p>Inspiriert vom cleanen Design-Ansatz Apples - schlicht, aber ausdrucksstark.</p>
+                </div>
+                <div class="feature">
+                    <h3>📱 Responsiv</h3>
+                    <p>Optimiert für alle Bildschirmgrößen, von Smartphones bis Desktop-Monitoren.</p>
+                </div>
+                <div class="feature">
+                    <h3>⚡ Einfach anzupassen</h3>
+                    <p>Einfache JSON-basierte Konfiguration für Ihre Blog-Inhalte.</p>
+                </div>
+                <div class="feature">
+                    <h3>🎨 Kategorien-Filter</h3>
+                    <p>Intelligente Kategorien-Filterung für eine bessere Nutzererfahrung.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="download" class="download-section">
+            <h2>Minimal Blog herunterladen</h2>
+            <p>Wählen Sie eine Option, um den Minimal Blog zu erhalten:</p>
+            <div class="download-options">
+                <a href="" class="download-btn" onclick="downloadFile('zip')">
+                    <i>📦</i>
+                    <span>ZIP-Datei</span>
+                    <small>(vollständig)</small>
+                </a>
+                <a href="https://raw.githubusercontent.com/n-km/blog/refs/heads/main/index.html" class="download-btn" onclick="downloadFile('html')">
+                    <i>📄</i>
+                    <span>Nur HTML</span>
+                    <small>(leicht)</small>
+                </a>
+                <a href="https://github.com/n-km/blog" class="download-btn" target="_blank">
+                    <i>🐙</i>
+                    <span>GitHub</span>
+                    <small>(Repository)</small>
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        © 2025 Minimal Blog | <a href="https://github.com/n-km" target="_blank">n-km</a> auf GitHub
+    </footer>
+
+    <script>
+    function scrollToSection(sectionId) {
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function downloadFile(type) {
+        let content, filename, mimeType;
+        
+        if (type === 'zip') {
+            // In einer echten Implementierung würde hier ein echter ZIP-Download-Link stehen
+            alert("In einer echten Implementierung würde jetzt die ZIP-Datei mit allen Ressourcen heruntergeladen werden.");
+            return;
+        } else if (type === 'html') {
+            // HTML-Inhalt aus der ursprünglichen Datei
+            content = `<!DOCTYPE html>
+<!-- saved from url=(0028)https://n-km.github.io/blog/ -->
+<html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://n-km.github.io/blog/images/mb2.webp">
+    <title>Minimal Blog</title>
+    <style>
+    /* CSS-Stile hier einfügen */
+    </style>
+</head>
+<body>
+    <!-- HTML-Inhalt hier einfügen -->
+    <script>
+    // JavaScript-Code hier einfügen
+    <\/script>
+</body></html>`;
+            filename = 'minimal-blog.html';
+            mimeType = 'text/html';
+        }
+        
+        // Erstelle einen Blob und einen Download-Link
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    </script>
+</body>
+</html>
