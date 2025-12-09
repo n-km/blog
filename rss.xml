@@ -8,12 +8,12 @@
     <generator>generate-rss.js</generator>
     <lastBuildDate>Mon, 18 Aug 2025 08:40:36 GMT</lastBuildDate>
     <item>
-                            <title>Webseite in Arbeit</title>
-                            <link>https://n-km.github.io/blog/#webseite-in-arbeit</link>
-                            <description><![CDATA[Momentan wird an der Webseite gearbeitet, um den Style zu optimieren.]]></description>
-                            <pubDate>Sun, 17 Aug 2025 22:00:00 GMT</pubDate>
-                            <category>Aktuelles</category>
-                            <author>n-km</author>
-                        </item>
+      <title>Webseite in Arbeit</title>
+      <link>https://n-km.github.io/blog/#webseite-in-arbeit</link>
+      <description><![CDATA[Momentan wird an der Webseite gearbeitet, um den Style zu optimieren.]]></description>
+      <pubDate>Sun, 17 Aug 2025 22:00:00 GMT</pubDate>
+      <category>Aktuelles</category>
+      <author>n-km</author>
+    </item>
   </channel>
 </rss>
