@@ -5,281 +5,261 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Editor</title>
     <style>
+/* ============================================
+   MINIMAL CHATGPT-STYLE UI
+   (based on provided preset)
+   ============================================ */
+
+/* ===== Design Tokens ===== */
 :root {
-    --main-bg: #f0f0f0;
-    --main-text: #333333;
-    --primary: #0078d7;
-    --primary-hover: #106ebe;
-    --primary-active: #005a9e;
-    --cat-bg: #e5f1fb;
-    --cat-text: #004e8c;
-    --gray: #eaeaea;
-    --white: #ffffff;
-    --border-color: #cccccc;
-    --border-light: #e5e5e5;
-    --border-dark: #ababab;
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --font-main: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --radius: 4px;
-    --aero-glass: rgba(255, 255, 255, 0.4);
+    --bg-main: #ffffff;
+    --bg-muted: #f5f5f5;
+
+    --text-main: #1b1b1b;
+    --text-muted: #6b6b6b;
+
+    --border: #d4d4d4;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* ===== Reset ===== */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* ===== Base ===== */
 html, body {
     height: 100%;
-    color: var(--main-text);
     font-family: var(--font-main);
-    font-size: 14px;
-    line-height: 1.5;
+    color: var(--text-main);
+    background: var(--bg-main);
+    line-height: 1.6;
+    padding: 10px;
+    margin: 5px;
 }
 
-body {
-    padding: 20px;
-    background-image: url('');
-    background-repeat: repeat;
-}
-
+/* ===== Header ===== */
 header {
-    background: linear-gradient(to bottom, #f9f9f9, #eaeaea);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-}
-
-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--primary);
+    background: transparent;
+    padding: 10px 0;
+    margin-bottom: 30px;
 }
 
 header h1 {
-    font-size: 22px;
+    font-size: 1.4rem;
     font-weight: 300;
-    color: #1a1a1a;
-    letter-spacing: 0.5px;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+/* ===== Navigation ===== */
 nav {
     display: flex;
-    gap: 8px;
-    margin-top: 15px;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 nav button {
-    background: linear-gradient(to bottom, #fefefe, #f1f1f1);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    padding: 6px 18px;
-    font-size: 13px;
-    color: #333;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    color: var(--text-main);
     cursor: pointer;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
 }
 
 nav button:hover {
-    background: linear-gradient(to bottom, #f6f6f6, #e8e8e8);
-    border-color: #a5a5a5;
+    background: var(--bg-muted);
 }
 
 nav button.active {
-    background: linear-gradient(to bottom, #e4f1fa, #d0e5f5);
-    border-color: #8bb8e8;
-    color: #0066cc;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+    background: #1b1b1b;
+    color: #ffffff;
 }
 
-nav button.active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--primary);
-}
-
+/* ===== Main Container ===== */
 main {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: var(--white);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    background-color: var(--white);
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
 }
 
-article {
+/* ===== Actions Bar ===== */
+.actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
     margin-bottom: 20px;
-    padding: 20px;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius);
-    background: var(--white);
-    box-shadow: var(--shadow);
-    transition: all 0.2s ease;
+    flex-wrap: wrap;
 }
 
-article:hover {
-    border-color: var(--border-dark);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.actions button,
+.actions input[type="file"],
+.actions input[type="file"]::-webkit-file-upload-button {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    max-width: max-content;
 }
 
+.actions button:hover,
+.actions input[type="file"]::-webkit-file-upload-button:hover {
+    background: var(--bg-muted);
+}
+
+.actions .primary {
+    background: #1b1b1b;
+    color: #ffffff;
+    border-color: #1b1b1b;
+}
+
+.actions .primary:hover {
+    opacity: 0.85;
+}
+
+/* ===== Articles ===== */
+article {
+    margin-bottom: 40px;
+    animation: fadeIn .3s ease-out;
+}
+
+article:last-child {
+    margin-bottom: 0;
+}
+strong {
+    font-weight: 600;
+}
+
+/* ===== Category Label ===== */
 .category-label {
     display: inline-block;
-    background: linear-gradient(to bottom, #e5f1fb, #d0e5f5);
-    color: var(--cat-text);
-    padding: 3px 10px;
-    margin-bottom: 12px;
-    border: 1px solid #b8d8f8;
-    border-radius: var(--radius);
-    font-size: 12px;
-    font-weight: 600;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
 }
 
+/* ===== Typography ===== */
 h2 {
-    font-size: 18px;
-    margin: 15px 0 10px 0;
-    color: #1a1a1a;
-    font-weight: 400;
-    letter-spacing: 0.2px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 6px 0 10px 0;
+    text-decoration: underline;
+}
+h3 {
+    font-weight: 500;
 }
 
 .meta {
-    color: #666;
-    margin-bottom: 15px;
-    font-size: 12px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
 }
 
+/* ===== Images ===== */
 .article-image {
-    max-width: 100%;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius);
-    margin: 15px 0;
-    box-shadow: var(--shadow);
+    width: 100%;
+    border-radius: var(--radius-sm);
+    margin: 10px 0;
 }
 
-footer {
-    margin-top: 30px;
-    padding: 12px;
-    text-align: center;
-    background: linear-gradient(to bottom, #f9f9f9, #eaeaea);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    color: #555;
-    font-size: 12px;
-    box-shadow: var(--shadow);
+/* ===== Forms ===== */
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: transparent;
+    font-size: 0.9rem;
+    outline: none;
+    resize: vertical;
 }
 
-/* Windows 7 Form Elements */
-select, input, textarea {
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    padding: 6px 10px;
-    background: var(--white);
-    font-family: var(--font-main);
-    font-size: 13px;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-    transition: all 0.2s ease;
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #1b1b1b;
 }
 
-select:focus, input:focus, textarea:focus {
-    border-color: #8bb8e8;
-    box-shadow: 0 0 0 1px #8bb8e8, 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+textarea {
+    min-height: 120px;
 }
 
+/* ===== Buttons ===== */
 button {
-    background: linear-gradient(to bottom, #fefefe, #f1f1f1);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    padding: 6px 18px;
-    font-size: 13px;
-    color: #333;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
     cursor: pointer;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-    transition: all 0.2s ease;
+    font-size: 0.9rem;
 }
 
 button:hover {
-    background: linear-gradient(to bottom, #f6f6f6, #e8e8e8);
-    border-color: #a5a5a5;
+    background: var(--bg-muted);
 }
 
-button:active {
-    background: linear-gradient(to bottom, #e8e8e8, #f6f6f6);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+button.primary {
+    background: #1b1b1b;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 6px 14px;
 }
 
-.category-filter-bar {
-    margin: 20px 0;
-    padding: 15px;
-    background: linear-gradient(to bottom, #f9f9f9, #f0f0f0);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+button.primary:hover {
+    opacity: 0.85;
 }
 
-.tab-content {
-    padding: 20px 0;
+/* ===== Footer ===== */
+footer {
+    margin-top: 50px;
+    padding: 10px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
 }
 
-.post-form {
-    margin: 20px 0;
-    padding: 20px;
-    background: linear-gradient(to bottom, #f9f9f9, #f0f0f0);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-}
-
-.post-form input, .post-form textarea {
-    margin-bottom: 15px;
-    width: 100%;
-    padding: 8px 12px;
-}
-
-.post-form button {
-    margin-right: 10px;
-    margin-top: 10px;
-}
-textarea {
-    min-height: 100%;
-    min-width: 50%;
-}
-
-/* Aero Glass Effekt für ausgewählte Elemente */
-nav button.active, .category-btn.active {
-    background: linear-gradient(to bottom, rgba(229, 241, 250, 0.8), rgba(208, 229, 245, 0.9));
-    backdrop-filter: blur(2px);
-}
-
-/* Subtile Animationen */
+/* ===== Animations ===== */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-article {
-    animation: fadeIn 0.3s ease-out;
+/* ===== Mobile Responsive ===== */
+@media (max-width: 640px) {
+
+    main {
+        padding: 0;
+    }
+
+    header h1 {
+        font-size: 1.2rem;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions button,
+    .actions input[type="file"]::-webkit-file-upload-button {
+        width: 100%;
+        text-align: center;
+    }
 }
+
+
 
     </style>
 </head>
@@ -287,6 +267,7 @@ article {
     <h1>Blog Editor</h1>
 
     <div class="actions">
+        <a href="../index.html"><button>Zurück</button></a>
         <button id="loadData">Daten laden</button>
         <input type="file" id="fileInput" class="file-input" accept=".json">
         <button id="importData">Importieren</button>
@@ -366,7 +347,7 @@ article {
 
             // Daten aus data.json laden
             function loadDataFromFile() {
-                fetch('data.json')
+                fetch('../data.json')
                     .then(response => {
                         if (!response.ok) throw new Error('Datei nicht gefunden');
                         return response.json();
