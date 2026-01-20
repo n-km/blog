@@ -6,11 +6,12 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Tue, 20 Jan 2026 10:34:42 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 20 Jan 2026 10:38:45 GMT</lastBuildDate>
     <item>
                             <title>20260120 - LF8 - Anlegen von Tabellen in der Datenbank &quot;test&quot;</title>
                             <link>https://n-km.github.io/blog/#20260120---lf8---anlegen-von-tabellen-in-der-datenbank-%22test%22</link>
-                            <description><![CDATA[CREATE TABLE T_Versicherungen(
+                            <description><![CDATA[<code>
+CREATE TABLE T_Versicherungen(
     p_v_nr INT,
     name CHAR(50),
     CONSTRAINT pk_T_Versicherungen PRIMARY KEY(p_v_nr)
@@ -28,7 +29,7 @@ CREATE TABLE T_Fahrzeuge(
         FOREIGN KEY (f_v_nr) 
         REFERENCES T_Versicherungen(p_v_nr)
 );
-
+</code>
 ]]></description>
                             <pubDate>Tue, 20 Jan 2026 11:33:00 GMT</pubDate>
                             <category>LF8</category>

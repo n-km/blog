@@ -6,7 +6,7 @@
     "author": "n-km",
     "category": "LF8",
     "image": "",
-    "text": "CREATE TABLE T_Versicherungen(\n    p_v_nr INT,\n    name CHAR(50),\n    CONSTRAINT pk_T_Versicherungen PRIMARY KEY(p_v_nr)\n);\n\nCREATE TABLE T_Fahrzeuge(\n    p_fg_id CHAR(6),\n    modell VARCHAR(20),\n    hersteller VARCHAR(50),\n    seit DATE,\n    praemie DECIMAL(5, 2),\n    f_v_nr INT,\n    CONSTRAINT pk_T_Fahrzeuge PRIMARY KEY(p_fg_id),\n    CONSTRAINT fk_T_Fahrzeuge_Versicherungen \n        FOREIGN KEY (f_v_nr) \n        REFERENCES T_Versicherungen(p_v_nr)\n);\n\n"
+    "text": "<code>\nCREATE TABLE T_Versicherungen(\n    p_v_nr INT,\n    name CHAR(50),\n    CONSTRAINT pk_T_Versicherungen PRIMARY KEY(p_v_nr)\n);\n\nCREATE TABLE T_Fahrzeuge(\n    p_fg_id CHAR(6),\n    modell VARCHAR(20),\n    hersteller VARCHAR(50),\n    seit DATE,\n    praemie DECIMAL(5, 2),\n    f_v_nr INT,\n    CONSTRAINT pk_T_Fahrzeuge PRIMARY KEY(p_fg_id),\n    CONSTRAINT fk_T_Fahrzeuge_Versicherungen \n        FOREIGN KEY (f_v_nr) \n        REFERENCES T_Versicherungen(p_v_nr)\n);\n</code>\n"
   },
   {
     "title": "Webseite in Arbeit",
