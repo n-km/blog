@@ -6,8 +6,65 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Tue, 20 Jan 2026 10:38:45 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 21 Jan 2026 08:32:40 GMT</lastBuildDate>
     <item>
+                            <title>20260121 - LF9 - STP Aufgabe Packet Tracer</title>
+                            <link>https://n-km.github.io/blog/#20260121---lf9---stp-aufgabe-packet-tracer</link>
+                            <description><![CDATA[Schritt-für-Schritt Anleitung<br>
+1. VLANs anlegen und Trunks konfigurieren<br>
+VLANs identifizieren:<br>
+<br>
+VLAN 50: Labor Programmierer<br>
+VLAN 51: Labor Netztechnik<br>
+VLAN 52: Labor CAD<br>
+VLAN 91: Drucker Netzwerk<br>
+<br>
+Auf jedem Switch (2960-24TT, 3560-24PS):<br>
+enable<br>
+configure terminal<br>
+vlan 50<br>
+name Labor_Programmierer<br>
+vlan 51<br>
+name Labor_Netztechnik<br>
+vlan 52<br>
+name Labor_CAD<br>
+vlan 91<br>
+name Drucker_Netzwerk<br>
+exit<br>
+Trunk-Ports konfigurieren (Verbindungen zwischen Switches):<br>
+interface range [Port-Range zu anderen Switches]<br>
+switchport mode trunk<br>
+switchport trunk allowed vlan 50,51,52,91<br>
+exit<br>
+2. Root-Bridge prüfen<br>
+show spanning-tree<br>
+Notieren Sie für jedes VLAN: Welcher Switch ist Root? (Niedrigste Bridge-ID gewinnt)<br>
+3. Überlegungen zur Root-Bridge<br>
+Prüfen Sie:<br>
+<br>
+Ist der zentrale Core-Switch (3560-24PS ML-SW_Core) die Root?<br>
+Hat die Root-Bridge die beste Position im Netzwerk?<br>
+Sollte der leistungsstärkere Switch die Root sein?<br>
+<br>
+Empfehlung: Der 3560-24PS ML-SW_Core sollte Root sein (zentrale Position, höhere Performance)<br>
+4. Root-Bridge manuell setzen<br>
+Methode 1 - Priority ändern:<br>
+spanning-tree vlan 50,51,52,91 priority 4096<br>
+(Niedriger Wert = höhere Priorität; Schritte von 4096)<br>
+Methode 2 - Root Primary:<br>
+spanning-tree vlan 50,51,52,91 root primary<br>
+5. Ergebnisse dokumentieren<br>
+Notieren Sie:<br>
+<br>
+Aktuelle Root-Bridge pro VLAN<br>
+Bridge-IDs und Priorities<br>
+Ihre Konfigurationsänderungen<br>
+Topologie nach der Optimierung<br>]]></description>
+                            <pubDate>Wed, 21 Jan 2026 09:30:00 GMT</pubDate>
+                            <category>LF9</category>
+                            <author>n-km</author>
+                        </item>
+<item>
                             <title>20260120 - LF8 - Anlegen von Tabellen in der Datenbank &quot;test&quot;</title>
                             <link>https://n-km.github.io/blog/#20260120---lf8---anlegen-von-tabellen-in-der-datenbank-%22test%22</link>
                             <description><![CDATA[<code>
