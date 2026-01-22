@@ -6,8 +6,16 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Wed, 21 Jan 2026 08:32:40 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jan 2026 10:52:13 GMT</lastBuildDate>
     <item>
+                            <title>20261022 - TEST - No.1</title>
+                            <link>https://n-km.github.io/blog/#20261022---test---no.1</link>
+                            <description><![CDATA[TEST]]></description>
+                            <pubDate>Thu, 22 Jan 2026 10:49:00 GMT</pubDate>
+                            <category>TEST</category>
+                            <author>n-km</author>
+                        </item>
+<item>
                             <title>20260121 - LF9 - STP Aufgabe Packet Tracer</title>
                             <link>https://n-km.github.io/blog/#20260121---lf9---stp-aufgabe-packet-tracer</link>
                             <description><![CDATA[Schritt-für-Schritt Anleitung<br>
