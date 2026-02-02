@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FISI AP1 Countdown</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --white: #ffffff;
+    --gray: #8b949e;
+    --border: #30363d;
+  }
+  /* Schnelles Layout-Rendering */
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    text-align: center;
+    border: 1px solid var(--border);
+    padding: 2rem 3rem;
+    border-radius: 6px;
+    background: #161b22;
+  }
+  h1 {
+    font-size: 1rem;
+    color: var(--gray);
+    margin: 0 0 1rem 0;
+    letter-spacing: 0.1em;
+  }
+  #demo {
+    font-size: clamp(2rem, 10vw, 5rem); /* Responsive Größe ohne Media Queries */
+    font-weight: 800;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px rgba(255,255,255,0.3);
+    will-change: opacity, text-shadow; /* GPU Optimierung */
+    animation: pulse 3s infinite ease-in-out;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+    50% { opacity: 0.8; text-shadow: 0 0 30px rgba(255,255,255,0.5); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>FISI AP1 COUNTDOWN</h1>
+  <p id="demo">--d --h --m --s</p>
+</div>
+
+<script>
+(function() {
+  const display = document.getElementById("demo");
+  const targetDate = new Date("2026-02-25T08:00:00").getTime();
+
+  function update() {
+    const now = Date.now();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      display.textContent = "SUCCESS";
+      return true;
+    }
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    // Template Literals sind minimal schneller und sauberer
+    display.textContent = `${d}d ${h.toString().padStart(2, '0')}h ${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
+    return false;
+  }
+
+  // Sofort-Start verhindert "Blitzen" beim Laden
+  if (!update()) {
+    setInterval(update, 1000);
+  }
+})();
+</script>
+</body>
+</html>
