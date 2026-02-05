@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TerminalOS v2.0</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --white: #ffffff;
+    --gray: #8b949e;
+    --border: #30363d;
+    --green: #58a6ff;
+    --prompt: #7ee787;
+    --window-bg: #161b22;
+    --taskbar-bg: #1c2128;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Courier New', Consolas, monospace;
+    overflow: hidden;
+    height: 100vh;
+    user-select: none;
+  }
+
+  /* Desktop */
+  .desktop {
+    height: calc(100vh - 50px);
+    position: relative;
+    padding: 20px;
+  }
+
+  /* Desktop Icons */
+  .desktop-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .desktop-icon {
+    cursor: pointer;
+    text-align: center;
+    width: 80px;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+
+  .desktop-icon:hover {
+    background: rgba(88, 166, 255, 0.1);
+  }
+
+  .desktop-icon-img {
+    font-size: 2rem;
+    margin-bottom: 5px;
+  }
+
+  .desktop-icon-label {
+    font-size: 0.75rem;
+    color: var(--white);
+  }
+
+  /* Window System */
+  .window {
+    position: absolute;
+    background: var(--window-bg);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+    min-width: 400px;
+    min-height: 300px;
+    display: none;
+    flex-direction: column;
+  }
+
+  .window.active {
+    z-index: 1000;
+  }
+
+  .window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - 50px) !important;
+    border-radius: 0;
+  }
+
+  .window-header {
+    background: var(--taskbar-bg);
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: move;
+  }
+
+  .window-title-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .window-icon {
+    font-size: 1.2rem;
+  }
+
+  .window-title {
+    color: var(--white);
+    font-size: 0.9rem;
+  }
+
+  .window-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .window-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .window-btn:hover {
+    opacity: 0.8;
+  }
+
+  .btn-close { background: #ff5f56; }
+  .btn-minimize { background: #ffbd2e; }
+  .btn-maximize { background: #27c93f; }
+
+  .window-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: var(--window-bg);
+  }
+
+  /* Taskbar */
+  .taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: var(--taskbar-bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 10px;
+    z-index: 10000;
+  }
+
+  .start-menu {
+    padding: 8px 20px;
+    background: var(--green);
+    color: var(--bg);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+
+  .start-menu:hover {
+    background: #6cb6ff;
+  }
+
+  .taskbar-apps {
+    display: flex;
+    gap: 5px;
+    flex: 1;
+  }
+
+  .taskbar-app {
+    padding: 8px 15px;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .taskbar-app:hover {
+    background: rgba(88, 166, 255, 0.2);
+  }
+
+  .taskbar-app.active {
+    background: rgba(88, 166, 255, 0.3);
+    border-color: var(--green);
+  }
+
+  .taskbar-info {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+
+  /* Start Menu Popup */
+  .start-popup {
+    position: fixed;
+    bottom: 60px;
+    left: 15px;
+    width: 300px;
+    background: var(--window-bg);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    display: none;
+    z-index: 9999;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+  }
+
+  .start-popup.show {
+    display: block;
+  }
+
+  .start-popup-title {
+    color: var(--green);
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .start-popup-apps {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .start-app-item {
+    padding: 10px;
+    background: rgba(88, 166, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+  }
+
+  .start-app-item:hover {
+    background: rgba(88, 166, 255, 0.15);
+    border-color: var(--green);
+  }
+
+  /* Terminal App Specific */
+  .terminal-body {
+    background: #000;
+    padding: 15px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .terminal-line {
+    margin-bottom: 5px;
+  }
+
+  .terminal-prompt {
+    color: var(--prompt);
+  }
+
+  .terminal-prompt::before {
+    content: 'user@terminalos:~$ ';
+    color: var(--green);
+  }
+
+  .terminal-input-line {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    outline: none;
+    flex: 1;
+  }
+
+  /* File Explorer */
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .file-item {
+    padding: 10px;
+    background: rgba(88, 166, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+  }
+
+  .file-item:hover {
+    background: rgba(88, 166, 255, 0.15);
+    border-color: var(--green);
+  }
+
+  /* Text Editor */
+  .editor-textarea {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: var(--white);
+    border: none;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    resize: none;
+    outline: none;
+  }
+
+  /* System Monitor */
+  .monitor-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(88, 166, 255, 0.05);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 4px;
+  }
+
+  .monitor-label {
+    color: var(--green);
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .monitor-bar {
+    background: var(--border);
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+
+  .monitor-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--prompt));
+    transition: width 0.3s;
+  }
+
+  .monitor-value {
+    color: var(--white);
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  /* Calculator */
+  .calculator {
+    max-width: 300px;
+  }
+
+  .calc-display {
+    background: #000;
+    color: var(--white);
+    padding: 20px;
+    text-align: right;
+    font-size: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    min-height: 60px;
+  }
+
+  .calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .calc-btn {
+    padding: 20px;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    color: var(--white);
+  }
+
+  .calc-btn:hover {
+    background: rgba(88, 166, 255, 0.2);
+  }
+
+  .calc-btn:active {
+    transform: scale(0.95);
+  }
+
+  .blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* Settings */
+  .settings-section {
+    margin-bottom: 25px;
+  }
+
+  .settings-title {
+    color: var(--green);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .settings-option {
+    padding: 12px;
+    background: rgba(88, 166, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .toggle {
+    width: 50px;
+    height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .toggle.on {
+    background: var(--green);
+  }
+
+  .toggle-slider {
+    width: 20px;
+    height: 20px;
+    background: var(--white);
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+  }
+
+  .toggle.on .toggle-slider {
+    left: 28px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Desktop -->
+<div class="desktop">
+  <div class="desktop-icons">
+    <div class="desktop-icon" data-app="terminal">
+      <div class="desktop-icon-img">💻</div>
+      <div class="desktop-icon-label">Terminal</div>
+    </div>
+    <div class="desktop-icon" data-app="files">
+      <div class="desktop-icon-img">📁</div>
+      <div class="desktop-icon-label">Files</div>
+    </div>
+    <div class="desktop-icon" data-app="editor">
+      <div class="desktop-icon-img">📝</div>
+      <div class="desktop-icon-label">Editor</div>
+    </div>
+    <div class="desktop-icon" data-app="calculator">
+      <div class="desktop-icon-img">🔢</div>
+      <div class="desktop-icon-label">Calculator</div>
+    </div>
+    <div class="desktop-icon" data-app="monitor">
+      <div class="desktop-icon-img">📊</div>
+      <div class="desktop-icon-label">Monitor</div>
+    </div>
+    <div class="desktop-icon" data-app="settings">
+      <div class="desktop-icon-img">⚙️</div>
+      <div class="desktop-icon-label">Settings</div>
+    </div>
+  </div>
+</div>
+
+<!-- Windows Container -->
+<div id="windows-container"></div>
+
+<!-- Taskbar -->
+<div class="taskbar">
+  <div class="start-menu" id="start-btn">▶ START</div>
+  <div class="taskbar-apps" id="taskbar-apps"></div>
+  <div class="taskbar-info">
+    <span id="clock">00:00:00</span>
+    <span id="date">01.01.2024</span>
+  </div>
+</div>
+
+<!-- Start Menu Popup -->
+<div class="start-popup" id="start-popup">
+  <div class="start-popup-title">Applications</div>
+  <div class="start-popup-apps">
+    <div class="start-app-item" data-app="terminal">
+      <span>💻</span> Terminal
+    </div>
+    <div class="start-app-item" data-app="files">
+      <span>📁</span> File Explorer
+    </div>
+    <div class="start-app-item" data-app="editor">
+      <span>📝</span> Text Editor
+    </div>
+    <div class="start-app-item" data-app="calculator">
+      <span>🔢</span> Calculator
+    </div>
+    <div class="start-app-item" data-app="monitor">
+      <span>📊</span> System Monitor
+    </div>
+    <div class="start-app-item" data-app="settings">
+      <span>⚙️</span> Settings
+    </div>
+  </div>
+</div>
+
+<script>
+// OS State
+const OS = {
+  windows: [],
+  activeWindow: null,
+  nextZIndex: 1000,
+  windowIdCounter: 0
+};
+
+// Window Templates
+const appTemplates = {
+  terminal: {
+    title: 'Terminal',
+    icon: '💻',
+    width: 700,
+    height: 500,
+    content: `
+      <div class="terminal-body">
+        <div class="terminal-line" style="color: var(--green);">TerminalOS v2.0 - Build 2024.02</div>
+        <div class="terminal-line" style="color: var(--gray);">Copyright (c) 2024 TerminalOS Foundation</div>
+        <div class="terminal-line" style="color: var(--gray);">Type 'help' for available commands</div>
+        <div class="terminal-line" style="margin-top: 10px;"></div>
+        <div id="terminal-output"></div>
+        <div class="terminal-input-line">
+          <span style="color: var(--green);">user@terminalos:~$</span>
+          <input type="text" class="terminal-input" id="terminal-input" autofocus>
+        </div>
+      </div>
+    `
+  },
+  files: {
+    title: 'File Explorer',
+    icon: '📁',
+    width: 600,
+    height: 450,
+    content: `
+      <div style="margin-bottom: 15px; padding: 10px; background: rgba(88,166,255,0.1); border-radius: 4px;">
+        <span style="color: var(--green);">📍 Location:</span> /home/user/
+      </div>
+      <div class="file-list">
+        <div class="file-item">📁 Documents</div>
+        <div class="file-item">📁 Downloads</div>
+        <div class="file-item">📁 Pictures</div>
+        <div class="file-item">📁 Projects</div>
+        <div class="file-item">📄 readme.txt</div>
+        <div class="file-item">📄 notes.md</div>
+        <div class="file-item">⚙️ config.json</div>
+      </div>
+    `
+  },
+  editor: {
+    title: 'Text Editor',
+    icon: '📝',
+    width: 700,
+    height: 500,
+    content: `
+      <textarea class="editor-textarea" placeholder="Start typing...">Welcome to TerminalOS Text Editor!
+
+This is a simple text editor for your OS.
+
+Features:
+- Syntax highlighting (coming soon)
+- Auto-save (coming soon)
+- Multi-file support (coming soon)
+
+Start writing your code or notes here...</textarea>
+    `
+  },
+  calculator: {
+    title: 'Calculator',
+    icon: '🔢',
+    width: 350,
+    height: 500,
+    content: `
+      <div class="calculator">
+        <div class="calc-display" id="calc-display">0</div>
+        <div class="calc-buttons">
+          <div class="calc-btn" data-value="7">7</div>
+          <div class="calc-btn" data-value="8">8</div>
+          <div class="calc-btn" data-value="9">9</div>
+          <div class="calc-btn" data-value="/" style="background: rgba(88,166,255,0.2);">÷</div>
+          
+          <div class="calc-btn" data-value="4">4</div>
+          <div class="calc-btn" data-value="5">5</div>
+          <div class="calc-btn" data-value="6">6</div>
+          <div class="calc-btn" data-value="*" style="background: rgba(88,166,255,0.2);">×</div>
+          
+          <div class="calc-btn" data-value="1">1</div>
+          <div class="calc-btn" data-value="2">2</div>
+          <div class="calc-btn" data-value="3">3</div>
+          <div class="calc-btn" data-value="-" style="background: rgba(88,166,255,0.2);">−</div>
+          
+          <div class="calc-btn" data-value="0">0</div>
+          <div class="calc-btn" data-value=".">.</div>
+          <div class="calc-btn" data-value="=" style="background: var(--green); color: var(--bg);">=</div>
+          <div class="calc-btn" data-value="+" style="background: rgba(88,166,255,0.2);">+</div>
+          
+          <div class="calc-btn" data-value="C" style="grid-column: span 4; background: #ff5f56; color: var(--white);">Clear</div>
+        </div>
+      </div>
+    `
+  },
+  monitor: {
+    title: 'System Monitor',
+    icon: '📊',
+    width: 600,
+    height: 500,
+    content: `
+      <div class="monitor-section">
+        <div class="monitor-label">CPU Usage</div>
+        <div class="monitor-value" id="cpu-value">0%</div>
+        <div class="monitor-bar">
+          <div class="monitor-bar-fill" id="cpu-bar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="monitor-section">
+        <div class="monitor-label">Memory Usage</div>
+        <div class="monitor-value" id="mem-value">0%</div>
+        <div class="monitor-bar">
+          <div class="monitor-bar-fill" id="mem-bar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="monitor-section">
+        <div class="monitor-label">Disk Usage</div>
+        <div class="monitor-value" id="disk-value">0%</div>
+        <div class="monitor-bar">
+          <div class="monitor-bar-fill" id="disk-bar" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="monitor-section">
+        <div class="monitor-label">Network Activity</div>
+        <div style="color: var(--white); margin-top: 10px;">
+          <div>↓ Download: <span id="net-down">0 KB/s</span></div>
+          <div>↑ Upload: <span id="net-up">0 KB/s</span></div>
+        </div>
+      </div>
+      
+      <div class="monitor-section">
+        <div class="monitor-label">System Information</div>
+        <div style="color: var(--gray); font-size: 0.85rem; line-height: 1.8;">
+          <div>OS: TerminalOS v2.0</div>
+          <div>Kernel: Linux 6.5.0</div>
+          <div>Uptime: <span id="uptime">0h 0m</span></div>
+          <div>Processes: <span id="processes">42</span></div>
+        </div>
+      </div>
+    `
+  },
+  settings: {
+    title: 'Settings',
+    icon: '⚙️',
+    width: 600,
+    height: 500,
+    content: `
+      <div class="settings-section">
+        <div class="settings-title">Display</div>
+        <div class="settings-option">
+          <span>Dark Mode</span>
+          <div class="toggle on"><div class="toggle-slider"></div></div>
+        </div>
+        <div class="settings-option">
+          <span>Animations</span>
+          <div class="toggle on"><div class="toggle-slider"></div></div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <div class="settings-title">System</div>
+        <div class="settings-option">
+          <span>Auto-updates</span>
+          <div class="toggle on"><div class="toggle-slider"></div></div>
+        </div>
+        <div class="settings-option">
+          <span>System Sounds</span>
+          <div class="toggle"><div class="toggle-slider"></div></div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <div class="settings-title">Privacy</div>
+        <div class="settings-option">
+          <span>Telemetry</span>
+          <div class="toggle"><div class="toggle-slider"></div></div>
+        </div>
+        <div class="settings-option">
+          <span>Error Reporting</span>
+          <div class="toggle on"><div class="toggle-slider"></div></div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <div class="settings-title">About</div>
+        <div style="color: var(--gray); font-size: 0.85rem; line-height: 1.8;">
+          <div>TerminalOS v2.0</div>
+          <div>Build: 2024.02.05</div>
+          <div>License: Open Source</div>
+          <div style="margin-top: 10px; color: var(--green);">© 2024 TerminalOS Foundation</div>
+        </div>
+      </div>
+    `
+  }
+};
+
+// Create Window
+function createWindow(appName) {
+  const template = appTemplates[appName];
+  if (!template) return;
+
+  // Check if window already exists
+  const existing = OS.windows.find(w => w.appName === appName);
+  if (existing) {
+    focusWindow(existing.id);
+    return;
+  }
+
+  const windowId = `window-${OS.windowIdCounter++}`;
+  const window = document.createElement('div');
+  window.className = 'window';
+  window.id = windowId;
+  window.style.display = 'flex';
+  window.style.left = `${50 + OS.windows.length * 30}px`;
+  window.style.top = `${50 + OS.windows.length * 30}px`;
+  window.style.width = `${template.width}px`;
+  window.style.height = `${template.height}px`;
+
+  window.innerHTML = `
+    <div class="window-header">
+      <div class="window-title-area">
+        <div class="window-icon">${template.icon}</div>
+        <div class="window-title">${template.title}</div>
+      </div>
+      <div class="window-controls">
+        <div class="window-btn btn-minimize" data-action="minimize"></div>
+        <div class="window-btn btn-maximize" data-action="maximize"></div>
+        <div class="window-btn btn-close" data-action="close"></div>
+      </div>
+    </div>
+    <div class="window-body">${template.content}</div>
+  `;
+
+  document.getElementById('windows-container').appendChild(window);
+
+  // Add to OS state
+  OS.windows.push({
+    id: windowId,
+    appName: appName,
+    element: window,
+    minimized: false,
+    maximized: false
+  });
+
+  // Add to taskbar
+  addTaskbarApp(windowId, template.title, template.icon);
+
+  // Initialize app-specific features
+  initializeApp(appName, window);
+
+  // Setup window interactions
+  setupWindowControls(windowId);
+  setupWindowDrag(windowId);
+
+  // Focus the window
+  focusWindow(windowId);
+}
+
+// Setup Window Controls
+function setupWindowControls(windowId) {
+  const window = document.getElementById(windowId);
+  const controls = window.querySelectorAll('.window-btn');
+
+  controls.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const action = btn.dataset.action;
+      
+      if (action === 'close') {
+        closeWindow(windowId);
+      } else if (action === 'minimize') {
+        minimizeWindow(windowId);
+      } else if (action === 'maximize') {
+        toggleMaximize(windowId);
+      }
+    });
+  });
+
+  window.addEventListener('mousedown', () => focusWindow(windowId));
+}
+
+// Setup Window Drag
+function setupWindowDrag(windowId) {
+  const window = document.getElementById(windowId);
+  const header = window.querySelector('.window-header');
+  let isDragging = false;
+  let startX, startY, startLeft, startTop;
+
+  header.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('window-btn')) return;
+    
+    const windowData = OS.windows.find(w => w.id === windowId);
+    if (windowData.maximized) return;
+
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = window.offsetLeft;
+    startTop = window.offsetTop;
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    window.style.left = `${startLeft + dx}px`;
+    window.style.top = `${startTop + dy}px`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+}
+
+// Window Actions
+function closeWindow(windowId) {
+  const windowData = OS.windows.find(w => w.id === windowId);
+  if (!windowData) return;
+
+  windowData.element.remove();
+  OS.windows = OS.windows.filter(w => w.id !== windowId);
+  
+  removeTaskbarApp(windowId);
+
+  if (OS.activeWindow === windowId) {
+    OS.activeWindow = null;
+    if (OS.windows.length > 0) {
+      focusWindow(OS.windows[OS.windows.length - 1].id);
+    }
+  }
+}
+
+function minimizeWindow(windowId) {
+  const windowData = OS.windows.find(w => w.id === windowId);
+  if (!windowData) return;
+
+  windowData.element.style.display = 'none';
+  windowData.minimized = true;
+  
+  const taskbarApp = document.querySelector(`[data-window-id="${windowId}"]`);
+  if (taskbarApp) taskbarApp.classList.remove('active');
+}
+
+function toggleMaximize(windowId) {
+  const windowData = OS.windows.find(w => w.id === windowId);
+  if (!windowData) return;
+
+  windowData.maximized = !windowData.maximized;
+  
+  if (windowData.maximized) {
+    windowData.element.classList.add('maximized');
+  } else {
+    windowData.element.classList.remove('maximized');
+  }
+}
+
+function focusWindow(windowId) {
+  OS.windows.forEach(w => {
+    w.element.classList.remove('active');
+    w.element.style.zIndex = 999;
+  });
+
+  const windowData = OS.windows.find(w => w.id === windowId);
+  if (!windowData) return;
+
+  if (windowData.minimized) {
+    windowData.element.style.display = 'flex';
+    windowData.minimized = false;
+  }
+
+  windowData.element.classList.add('active');
+  windowData.element.style.zIndex = OS.nextZIndex++;
+  OS.activeWindow = windowId;
+
+  // Update taskbar
+  document.querySelectorAll('.taskbar-app').forEach(app => {
+    app.classList.remove('active');
+  });
+  const taskbarApp = document.querySelector(`[data-window-id="${windowId}"]`);
+  if (taskbarApp) taskbarApp.classList.add('active');
+}
+
+// Taskbar Management
+function addTaskbarApp(windowId, title, icon) {
+  const taskbarApps = document.getElementById('taskbar-apps');
+  const app = document.createElement('div');
+  app.className = 'taskbar-app';
+  app.dataset.windowId = windowId;
+  app.innerHTML = `${icon} ${title}`;
+  
+  app.addEventListener('click', () => {
+    const windowData = OS.windows.find(w => w.id === windowId);
+    if (windowData.minimized || OS.activeWindow !== windowId) {
+      focusWindow(windowId);
+    } else {
+      minimizeWindow(windowId);
+    }
+  });
+
+  taskbarApps.appendChild(app);
+}
+
+function removeTaskbarApp(windowId) {
+  const app = document.querySelector(`[data-window-id="${windowId}"]`);
+  if (app) app.remove();
+}
+
+// Initialize App-specific Features
+function initializeApp(appName, window) {
+  if (appName === 'terminal') {
+    initTerminal(window);
+  } else if (appName === 'calculator') {
+    initCalculator(window);
+  } else if (appName === 'monitor') {
+    initMonitor(window);
+  } else if (appName === 'settings') {
+    initSettings(window);
+  }
+}
+
+// Terminal
+function initTerminal(window) {
+  const input = window.querySelector('#terminal-input');
+  const output = window.querySelector('#terminal-output');
+
+  const commands = {
+    help: 'Available commands: help, clear, echo, date, uname, ls, whoami, neofetch',
+    clear: '',
+    date: () => new Date().toString(),
+    uname: 'TerminalOS 2.0 x86_64 GNU/Linux',
+    ls: 'Documents  Downloads  Pictures  Projects  readme.txt  notes.md  config.json',
+    whoami: 'user',
+    neofetch: `
+      ╔══════════════════════════════╗
+      ║      TerminalOS v2.0         ║
+      ╠══════════════════════════════╣
+      ║ OS: TerminalOS 2.0           ║
+      ║ Kernel: 6.5.0-terminal       ║
+      ║ Shell: bash 5.2.0            ║
+      ║ DE: TerminalDE               ║
+      ║ CPU: Virtual CPU (4 cores)   ║
+      ║ Memory: 8192 MB              ║
+      ╚══════════════════════════════╝
+    `
+  };
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input.value.trim();
+      
+      if (cmd) {
+        const line = document.createElement('div');
+        line.className = 'terminal-line';
+        line.innerHTML = `<span style="color: var(--green);">user@terminalos:~$</span> ${cmd}`;
+        output.appendChild(line);
+
+        const cmdName = cmd.split(' ')[0];
+        
+        if (cmdName === 'clear') {
+          output.innerHTML = '';
+        } else if (cmdName === 'echo') {
+          const text = cmd.substring(5);
+          const result = document.createElement('div');
+          result.className = 'terminal-line';
+          result.textContent = text;
+          output.appendChild(result);
+        } else if (commands[cmdName]) {
+          const result = document.createElement('div');
+          result.className = 'terminal-line';
+          result.innerHTML = typeof commands[cmdName] === 'function' 
+            ? commands[cmdName]() 
+            : commands[cmdName];
+          result.style.whiteSpace = 'pre';
+          output.appendChild(result);
+        } else {
+          const error = document.createElement('div');
+          error.className = 'terminal-line';
+          error.style.color = '#ff5f56';
+          error.textContent = `bash: ${cmdName}: command not found`;
+          output.appendChild(error);
+        }
+      }
+
+      input.value = '';
+      window.querySelector('.window-body').scrollTop = window.querySelector('.window-body').scrollHeight;
+    }
+  });
+}
+
+// Calculator
+function initCalculator(window) {
+  const display = window.querySelector('#calc-display');
+  let currentValue = '0';
+  let operator = null;
+  let previousValue = null;
+  let waitingForOperand = false;
+
+  window.querySelectorAll('.calc-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = btn.dataset.value;
+
+      if (value === 'C') {
+        currentValue = '0';
+        operator = null;
+        previousValue = null;
+        waitingForOperand = false;
+        display.textContent = currentValue;
+        return;
+      }
+
+      if (value === '=') {
+        if (operator && previousValue !== null) {
+          currentValue = calculate(previousValue, currentValue, operator);
+          operator = null;
+          previousValue = null;
+          waitingForOperand = true;
+          display.textContent = currentValue;
+        }
+        return;
+      }
+
+      if (['+', '-', '*', '/'].includes(value)) {
+        if (operator && previousValue !== null && !waitingForOperand) {
+          currentValue = calculate(previousValue, currentValue, operator);
+          display.textContent = currentValue;
+        }
+        operator = value;
+        previousValue = currentValue;
+        waitingForOperand = true;
+        return;
+      }
+
+      if (waitingForOperand) {
+        currentValue = value;
+        waitingForOperand = false;
+      } else {
+        currentValue = currentValue === '0' ? value : currentValue + value;
+      }
+
+      display.textContent = currentValue;
+    });
+  });
+
+  function calculate(a, b, op) {
+    a = parseFloat(a);
+    b = parseFloat(b);
+    switch(op) {
+      case '+': return (a + b).toString();
+      case '-': return (a - b).toString();
+      case '*': return (a * b).toString();
+      case '/': return (a / b).toString();
+      default: return b.toString();
+    }
+  }
+}
+
+// System Monitor
+function initMonitor(window) {
+  let uptime = 0;
+
+  setInterval(() => {
+    const cpu = Math.floor(Math.random() * 40 + 30);
+    const mem = Math.floor(Math.random() * 30 + 50);
+    const disk = Math.floor(Math.random() * 10 + 65);
+    const netDown = Math.floor(Math.random() * 500);
+    const netUp = Math.floor(Math.random() * 200);
+
+    window.querySelector('#cpu-value').textContent = `${cpu}%`;
+    window.querySelector('#cpu-bar').style.width = `${cpu}%`;
+    
+    window.querySelector('#mem-value').textContent = `${mem}%`;
+    window.querySelector('#mem-bar').style.width = `${mem}%`;
+    
+    window.querySelector('#disk-value').textContent = `${disk}%`;
+    window.querySelector('#disk-bar').style.width = `${disk}%`;
+    
+    window.querySelector('#net-down').textContent = `${netDown} KB/s`;
+    window.querySelector('#net-up').textContent = `${netUp} KB/s`;
+
+    uptime += 1;
+    const hours = Math.floor(uptime / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    window.querySelector('#uptime').textContent = `${hours}h ${minutes}m`;
+    
+    window.querySelector('#processes').textContent = Math.floor(Math.random() * 20 + 35);
+  }, 1000);
+}
+
+// Settings
+function initSettings(window) {
+  window.querySelectorAll('.toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('on');
+    });
+  });
+}
+
+// Desktop Icons
+document.querySelectorAll('.desktop-icon').forEach(icon => {
+  icon.addEventListener('dblclick', () => {
+    createWindow(icon.dataset.app);
+  });
+});
+
+// Start Menu
+const startBtn = document.getElementById('start-btn');
+const startPopup = document.getElementById('start-popup');
+
+startBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  startPopup.classList.toggle('show');
+});
+
+document.addEventListener('click', (e) => {
+  if (!startPopup.contains(e.target) && e.target !== startBtn) {
+    startPopup.classList.remove('show');
+  }
+});
+
+document.querySelectorAll('.start-app-item').forEach(item => {
+  item.addEventListener('click', () => {
+    createWindow(item.dataset.app);
+    startPopup.classList.remove('show');
+  });
+});
+
+// Clock
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('de-DE');
+  const date = now.toLocaleDateString('de-DE');
+  
+  document.getElementById('clock').textContent = time;
+  document.getElementById('date').textContent = date;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+// Boot Animation
+window.addEventListener('load', () => {
+  console.log('%cTerminalOS v2.0 loaded successfully', 'color: #58a6ff; font-size: 16px; font-weight: bold;');
+});
+</script>
+
+</body>
+</html>
