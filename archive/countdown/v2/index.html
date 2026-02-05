@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Countdowns</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --white: #ffffff;
+    --gray: #8b949e;
+    --border: #30363d;
+    --green: #58a6ff;
+    --prompt: #7ee787;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Courier New', Consolas, monospace;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  .terminal {
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: #161b22;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+  }
+
+  .terminal-header {
+    background: #1c2128;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .btn-close { background: #ff5f56; }
+  .btn-minimize { background: #ffbd2e; }
+  .btn-maximize { background: #27c93f; }
+
+  .terminal-title {
+    margin-left: 1rem;
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  .terminal-body {
+    padding: 2rem;
+  }
+
+  .boot-text {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prompt-line {
+    color: var(--prompt);
+    margin-bottom: 1rem;
+  }
+
+  .prompt-line::before {
+    content: '$ ';
+    color: var(--green);
+  }
+
+  .countdown-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    background: rgba(88, 166, 255, 0.05);
+  }
+
+  .countdown-label {
+    color: var(--green);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .countdown-display {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    font-family: 'Courier New', monospace;
+  }
+
+  .countdown-info {
+    color: var(--gray);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+
+  .status-line {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .success {
+    color: var(--prompt);
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="terminal">
+  <div class="terminal-header">
+    <div class="terminal-button btn-close"></div>
+    <div class="terminal-button btn-minimize"></div>
+    <div class="terminal-button btn-maximize"></div>
+    <div class="terminal-title">countdown-system v2.0</div>
+  </div>
+
+  <div class="terminal-body">
+    <div class="boot-text">
+      [SYSTEM] Initializing countdown monitors...<br>
+      [SYSTEM] Loading target dates...<br>
+      [OK] All systems operational
+    </div>
+
+    <div class="prompt-line">./countdown --monitor-all</div>
+
+    <div class="countdown-section">
+      <div class="countdown-label">⟩ AP1 Prüfung</div>
+      <div class="countdown-display" id="ap1">Calculating...</div>
+      <div class="countdown-info">Target: 25.02.2026 | Status: <span id="status-ap1">PENDING</span></div>
+    </div>
+
+    <div class="countdown-section">
+      <div class="countdown-label">⟩ FISI Abschluss</div>
+      <div class="countdown-display" id="fisi">Calculating...</div>
+      <div class="countdown-info">Target: 31.07.2027 | Status: <span id="status-fisi">PENDING</span></div>
+    </div>
+
+    <div class="countdown-section">
+      <div class="countdown-label">⟩ Studenten Abschluss</div>
+      <div class="countdown-display" id="student">Calculating...</div>
+      <div class="countdown-info">Target: 30.09.2027 | Status: <span id="status-student">PENDING</span></div>
+    </div>
+
+    <div class="status-line">
+      [INFO] Real-time monitoring active<span class="blink">_</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const countdowns = [
+    {
+      id: 'ap1',
+      statusId: 'status-ap1',
+      target: new Date('2026-02-25T08:00:00').getTime(),
+      name: 'AP1'
+    },
+    {
+      id: 'fisi',
+      statusId: 'status-fisi',
+      target: new Date('2027-07-31T08:00:00').getTime(),
+      name: 'FISI'
+    },
+    {
+      id: 'student',
+      statusId: 'status-student',
+      target: new Date('2027-09-30T08:00:00').getTime(),
+      name: 'STUDENT'
+    }
+  ];
+
+  function updateCountdown(countdown) {
+    const display = document.getElementById(countdown.id);
+    const statusEl = document.getElementById(countdown.statusId);
+    const now = Date.now();
+    const diff = countdown.target - now;
+
+    if (diff <= 0) {
+      display.innerHTML = '<span class="success">✓ COMPLETED</span>';
+      statusEl.innerHTML = '<span class="success">SUCCESS</span>';
+      return true;
+    }
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+    const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+    const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+
+    display.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    statusEl.textContent = 'ACTIVE';
+
+    return false;
+  }
+
+  function updateAll() {
+    let allCompleted = true;
+    countdowns.forEach(countdown => {
+      if (!updateCountdown(countdown)) {
+        allCompleted = false;
+      }
+    });
+
+    // Update page title with first active countdown
+    const firstActive = countdowns.find(c => c.target - Date.now() > 0);
+    if (firstActive) {
+      const diff = firstActive.target - Date.now();
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+      const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+      const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+      document.title = `${firstActive.name}: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    } else {
+      document.title = 'All Countdowns Complete!';
+    }
+  }
+
+  updateAll();
+  setInterval(updateAll, 1000);
+})();
+</script>
+
+</body>
+</html>
