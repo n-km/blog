@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Countdowns</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --white: #ffffff;
+    --gray: #8b949e;
+    --border: #30363d;
+    --green: #58a6ff;
+    --prompt: #7ee787;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Courier New', Consolas, monospace;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  .terminal {
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: #161b22;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+  }
+
+  .terminal-header {
+    background: #1c2128;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .btn-close { background: #ff5f56; }
+  .btn-minimize { background: #ffbd2e; }
+  .btn-maximize { background: #27c93f; }
+
+  .terminal-title {
+    margin-left: 1rem;
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  .terminal-body {
+    padding: 2rem;
+  }
+
+  .boot-text {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prompt-line {
+    color: var(--prompt);
+    margin-bottom: 1rem;
+  }
+
+  .prompt-line::before {
+    content: '$ ';
+    color: var(--green);
+  }
+
+  .countdown-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    background: rgba(88, 166, 255, 0.05);
+  }
+
+  .countdown-label {
+    color: var(--green);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .countdown-display {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    font-family: 'Courier New', monospace;
+  }
+
+  .countdown-info {
+    color: var(--gray);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Progress Bar Styles */
+  .progress-container {
+    margin-top: 1rem;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(139, 148, 158, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 3px;
+    transition: width 1s ease;
+    position: relative;
+  }
+
+  .progress-bar-fill.completed {
+    background: var(--prompt);
+  }
+
+  .progress-percentage {
+    color: var(--gray);
+    font-size: 0.75rem;
+    margin-top: 0.4rem;
+    text-align: right;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-value {
+    color: var(--green);
+    font-size: 1.1rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    color: var(--gray);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+  }
+
+  .status-line {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .success {
+    color: var(--prompt);
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="terminal">
+  <div class="terminal-header">
+    <div class="terminal-button btn-close"></div>
+    <div class="terminal-button btn-minimize"></div>
+    <div class="terminal-button btn-maximize"></div>
+    <div class="terminal-title">countdown-system v2.0</div>
+  </div>
+
+  <div class="terminal-body">
+    <div class="boot-text">
+      [SYSTEM] Initializing countdown monitors...<br>
+      [SYSTEM] Loading target dates...<br>
+      [OK] All systems operational
+    </div>
+
+    <div class="prompt-line">./countdown --monitor-all</div>
+
+    <div class="countdown-section">
+      <div class="countdown-label">⟩ AP1 Prüfung</div>
+      <div class="countdown-display" id="ap1">Calculating...</div>
+      <div class="countdown-info">Target: 25.02.2026 | Status: <span id="status-ap1">PENDING</span></div>
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-ap1" style="width: 0%"></div>
+        </div>
+        <div class="progress-percentage" id="percentage-ap1">0%</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-days-ap1">0</div>
+          <div class="stat-label">Tage vergangen</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-hours-ap1">0</div>
+          <div class="stat-label">Stunden vergangen</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-minutes-ap1">0</div>
+          <div class="stat-label">Minuten vergangen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="countdown-section">
+      <div class="countdown-label">⟩ FISI Abschluss</div>
+      <div class="countdown-display" id="fisi">Calculating...</div>
+      <div class="countdown-info">Target: 31.07.2027 | Status: <span id="status-fisi">PENDING</span></div>
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fisi" style="width: 0%"></div>
+        </div>
+        <div class="progress-percentage" id="percentage-fisi">0%</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-days-fisi">0</div>
+          <div class="stat-label">Tage vergangen</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-hours-fisi">0</div>
+          <div class="stat-label">Stunden vergangen</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-minutes-fisi">0</div>
+          <div class="stat-label">Minuten vergangen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="countdown-section">
+      <div class="countdown-label">⟩ Studenten Abschluss</div>
+      <div class="countdown-display" id="student">Calculating...</div>
+      <div class="countdown-info">Target: 30.09.2027 | Status: <span id="status-student">PENDING</span></div>
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-student" style="width: 0%"></div>
+        </div>
+        <div class="progress-percentage" id="percentage-student">0%</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-days-student">0</div>
+          <div class="stat-label">Tage vergangen</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-hours-student">0</div>
+          <div class="stat-label">Stunden vergangen</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="elapsed-minutes-student">0</div>
+          <div class="stat-label">Minuten vergangen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-line">
+      [INFO] Real-time monitoring active<span class="blink">_</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const startDate = new Date('2024-08-01T00:00:00').getTime();
+
+  const countdowns = [
+    {
+      id: 'ap1',
+      statusId: 'status-ap1',
+      progressId: 'progress-ap1',
+      percentageId: 'percentage-ap1',
+      elapsedDaysId: 'elapsed-days-ap1',
+      elapsedHoursId: 'elapsed-hours-ap1',
+      elapsedMinutesId: 'elapsed-minutes-ap1',
+      target: new Date('2026-02-25T08:00:00').getTime(),
+      name: 'AP1'
+    },
+    {
+      id: 'fisi',
+      statusId: 'status-fisi',
+      progressId: 'progress-fisi',
+      percentageId: 'percentage-fisi',
+      elapsedDaysId: 'elapsed-days-fisi',
+      elapsedHoursId: 'elapsed-hours-fisi',
+      elapsedMinutesId: 'elapsed-minutes-fisi',
+      target: new Date('2027-07-31T08:00:00').getTime(),
+      name: 'FISI'
+    },
+    {
+      id: 'student',
+      statusId: 'status-student',
+      progressId: 'progress-student',
+      percentageId: 'percentage-student',
+      elapsedDaysId: 'elapsed-days-student',
+      elapsedHoursId: 'elapsed-hours-student',
+      elapsedMinutesId: 'elapsed-minutes-student',
+      target: new Date('2027-09-30T08:00:00').getTime(),
+      name: 'STUDENT'
+    }
+  ];
+
+  function updateCountdown(countdown) {
+    const display = document.getElementById(countdown.id);
+    const statusEl = document.getElementById(countdown.statusId);
+    const progressEl = document.getElementById(countdown.progressId);
+    const percentageEl = document.getElementById(countdown.percentageId);
+    const elapsedDaysEl = document.getElementById(countdown.elapsedDaysId);
+    const elapsedHoursEl = document.getElementById(countdown.elapsedHoursId);
+    const elapsedMinutesEl = document.getElementById(countdown.elapsedMinutesId);
+    const now = Date.now();
+    const diff = countdown.target - now;
+
+    // Calculate progress percentage from start date (01.08.2024)
+    const totalDuration = countdown.target - startDate;
+    const elapsed = now - startDate;
+    const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
+    
+    progressEl.style.width = progress.toFixed(2) + '%';
+    percentageEl.textContent = progress.toFixed(1) + '%';
+
+    // Calculate elapsed time statistics
+    const elapsedDays = Math.floor(elapsed / 86400000);
+    const elapsedHours = Math.floor(elapsed / 3600000);
+    const elapsedMinutes = Math.floor(elapsed / 60000);
+
+    elapsedDaysEl.textContent = elapsedDays.toLocaleString('de-DE');
+    elapsedHoursEl.textContent = elapsedHours.toLocaleString('de-DE');
+    elapsedMinutesEl.textContent = elapsedMinutes.toLocaleString('de-DE');
+
+    if (diff <= 0) {
+      display.innerHTML = '<span class="success">✓ COMPLETED</span>';
+      statusEl.innerHTML = '<span class="success">SUCCESS</span>';
+      progressEl.style.width = '100%';
+      progressEl.classList.add('completed');
+      percentageEl.textContent = '100%';
+      return true;
+    }
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+    const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+    const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+
+    display.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    statusEl.textContent = 'ACTIVE';
+
+    return false;
+  }
+
+  function updateAll() {
+    let allCompleted = true;
+    countdowns.forEach(countdown => {
+      if (!updateCountdown(countdown)) {
+        allCompleted = false;
+      }
+    });
+
+    // Update page title with first active countdown
+    const firstActive = countdowns.find(c => c.target - Date.now() > 0);
+    if (firstActive) {
+      const diff = firstActive.target - Date.now();
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000).toString().padStart(2, '0');
+      const minutes = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+      const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+      document.title = `${firstActive.name}: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    } else {
+      document.title = 'All Countdowns Complete!';
+    }
+  }
+
+  updateAll();
+  setInterval(updateAll, 1000);
+})();
+</script>
+
+</body>
+</html>
