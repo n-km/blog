@@ -302,8 +302,6 @@
 
 <script>
 (function() {
-  const startDate = new Date('2024-08-01T00:00:00').getTime();
-
   const countdowns = [
     {
       id: 'ap1',
@@ -313,6 +311,7 @@
       elapsedDaysId: 'elapsed-days-ap1',
       elapsedHoursId: 'elapsed-hours-ap1',
       elapsedMinutesId: 'elapsed-minutes-ap1',
+      start: new Date('2024-08-01T00:00:00').getTime(), // Individuelles Startdatum
       target: new Date('2026-02-25T08:00:00').getTime(),
       name: 'AP1'
     },
@@ -324,6 +323,7 @@
       elapsedDaysId: 'elapsed-days-fisi',
       elapsedHoursId: 'elapsed-hours-fisi',
       elapsedMinutesId: 'elapsed-minutes-fisi',
+      start: new Date('2024-08-01T00:00:00').getTime(), // Hier anpassen
       target: new Date('2027-07-31T08:00:00').getTime(),
       name: 'FISI'
     },
@@ -335,6 +335,7 @@
       elapsedDaysId: 'elapsed-days-student',
       elapsedHoursId: 'elapsed-hours-student',
       elapsedMinutesId: 'elapsed-minutes-student',
+      start: new Date('2024-10-01T00:00:00').getTime(), // Beispiel für ein anderes Datum
       target: new Date('2027-09-30T08:00:00').getTime(),
       name: 'STUDENT'
     }
@@ -348,32 +349,37 @@
     const elapsedDaysEl = document.getElementById(countdown.elapsedDaysId);
     const elapsedHoursEl = document.getElementById(countdown.elapsedHoursId);
     const elapsedMinutesEl = document.getElementById(countdown.elapsedMinutesId);
+    
     const now = Date.now();
     const diff = countdown.target - now;
 
-    // Calculate progress percentage from start date (01.08.2024)
-    const totalDuration = countdown.target - startDate;
-    const elapsed = now - startDate;
+    // Nutzt jetzt das spezifische Startdatum des Objekts
+    const totalDuration = countdown.target - countdown.start;
+    const elapsed = now - countdown.start;
+    
+    // Berechnung des Fortschritts
     const progress = Math.min(Math.max((elapsed / totalDuration) * 100, 0), 100);
     
-    progressEl.style.width = progress.toFixed(2) + '%';
-    percentageEl.textContent = progress.toFixed(1) + '%';
+    if (progressEl) progressEl.style.width = progress.toFixed(2) + '%';
+    if (percentageEl) percentageEl.textContent = progress.toFixed(1) + '%';
 
-    // Calculate elapsed time statistics
+    // Verstrichene Zeit Statistiken
     const elapsedDays = Math.floor(elapsed / 86400000);
     const elapsedHours = Math.floor(elapsed / 3600000);
     const elapsedMinutes = Math.floor(elapsed / 60000);
 
-    elapsedDaysEl.textContent = elapsedDays.toLocaleString('de-DE');
-    elapsedHoursEl.textContent = elapsedHours.toLocaleString('de-DE');
-    elapsedMinutesEl.textContent = elapsedMinutes.toLocaleString('de-DE');
+    if (elapsedDaysEl) elapsedDaysEl.textContent = elapsedDays.toLocaleString('de-DE');
+    if (elapsedHoursEl) elapsedHoursEl.textContent = elapsedHours.toLocaleString('de-DE');
+    if (elapsedMinutesEl) elapsedMinutesEl.textContent = elapsedMinutes.toLocaleString('de-DE');
 
     if (diff <= 0) {
       display.innerHTML = '<span class="success">✓ COMPLETED</span>';
       statusEl.innerHTML = '<span class="success">SUCCESS</span>';
-      progressEl.style.width = '100%';
-      progressEl.classList.add('completed');
-      percentageEl.textContent = '100%';
+      if (progressEl) {
+        progressEl.style.width = '100%';
+        progressEl.classList.add('completed');
+      }
+      if (percentageEl) percentageEl.textContent = '100%';
       return true;
     }
 
@@ -389,14 +395,11 @@
   }
 
   function updateAll() {
-    let allCompleted = true;
     countdowns.forEach(countdown => {
-      if (!updateCountdown(countdown)) {
-        allCompleted = false;
-      }
+      updateCountdown(countdown);
     });
 
-    // Update page title with first active countdown
+    // Titel-Update Logik
     const firstActive = countdowns.find(c => c.target - Date.now() > 0);
     if (firstActive) {
       const diff = firstActive.target - Date.now();
