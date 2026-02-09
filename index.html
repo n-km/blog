@@ -9,6 +9,13 @@
 </head>
 <body>
     <header>
+        <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round"></div>
+        </label>
+        </div>
+
         <h1>Minimal Blog</h1>
         <nav>
             <button class="tab-btn active" data-tab="home" aria-current="page">Home</button>
@@ -193,6 +200,28 @@
         .catch(() => {
             document.getElementById('blog-content').innerHTML = '<p>Blog-Artikel konnten nicht geladen werden.</p>';
         });
+
+
+        // Dark Mode Toggle Logic
+const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+const currentTheme = localStorage.getItem('theme');
+
+if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    if (currentTheme === 'dark') {
+        toggleSwitch.checked = true;
+    }
+}
+
+toggleSwitch.addEventListener('change', (e) => {
+    if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+    }
+});
     </script>
 </body>
 </html>
