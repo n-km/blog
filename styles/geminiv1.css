@@ -136,29 +136,105 @@ p { margin-bottom: 1rem; color: var(--main-text); opacity: 0.9; }
 h2 { font-weight: 700; letter-spacing: -0.01em; }
 code { font-size: 0.9rem; background: var(--cat-bg); padding: 2px 6px; border-radius: 4px; }
 
-/* --- Filter Bar --- */
+/* --- Modernized Category Filter Bar --- */
 .category-filter-bar {
-    margin-bottom: 2.5rem;
+    margin: 0.5rem 0 2.5rem 0;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 44px;
+}
+
+/* Container für Dropdown (Many Mode) */
+.category-dropdown-group {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    padding: 6px 12px 6px 18px;
+    border-radius: 100px; /* Vollrund */
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.category-label-dropdown {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--cat-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 12px;
+}
+
+/* Das Select-Feld */
+.category-dropdown {
+    appearance: none;
+    background-color: var(--gray);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--main-text);
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 6px 34px 6px 16px;
+    transition: all 0.2s ease;
+    outline: none;
+    /* Custom Pfeil als SVG für bessere Skalierung */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236e7781' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+}
+
+.category-dropdown:hover, .category-dropdown:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+/* Container für Buttons (Few Mode) */
+.category-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
+/* Die Pill-Buttons */
 .category-btn {
-    background: transparent;
+    background: var(--white);
     border: 1px solid var(--border);
-    padding: 0.4rem 1rem;
-    border-radius: 100px;
-    margin: 0 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
     color: var(--main-text);
-    transition: 0.2s;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.category-btn:hover {
+    background: var(--cat-bg);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .category-btn.active {
-    background: var(--main-text);
-    color: var(--white);
-    border-color: var(--main-text);
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+}
+
+/* Logik für Anzeige */
+.category-filter-bar.few .category-btns { display: flex; }
+.category-filter-bar.few .category-dropdown-group { display: none; }
+
+.category-filter-bar.many .category-btns { display: none; }
+.category-filter-bar.many .category-dropdown-group { display: flex; }
+
+/* Dark Mode Anpassung für den Dropdown-Pfeil */
+[data-theme="dark"] .category-dropdown {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e6edf3' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
 }
 
 /* --- Theme Switch --- */
