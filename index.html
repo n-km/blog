@@ -164,50 +164,47 @@
     const container = document.getElementById('blog-content');
     container.innerHTML = '';
     
-    let filtered = posts;
-    if (currentCategory !== 'Alle') {
-        filtered = posts.filter(p => p.category === currentCategory);
-    }
+    // Filter-Logik
+    let filtered = (currentCategory === 'Alle') ? posts : posts.filter(p => p.category === currentCategory);
     
     if (filtered.length === 0) {
-        container.innerHTML = '<p>Keine Blogposts in dieser Kategorie.</p>';
+        container.innerHTML = '<p>Keine Blogposts gefunden.</p>';
         return;
     }
 
     filtered.forEach(post => {
         const article = document.createElement('article');
         
-        // 1. ANKER-ID GENERIEREN (Wichtig für RSS-Links)
-        // Ersetzt Leerzeichen durch Bindestriche und macht alles klein
+        // --- NEU: ANKER-ID GENERIEREN ---
+        // Dies macht aus "Hallo Welt" -> "hallo-welt"
         const postID = post.title.replace(/\s+/g, '-').toLowerCase();
         article.id = postID; 
 
         let html = '<div class="post-header">';
-        if(post.category) {
-            html += `<span class="category-label">${post.category}</span>`;
-        }
+        if(post.category) html += `<span class="category-label">${post.category}</span>`;
         html += `<h2>${post.title}</h2></div>`;
         
-        // 2. META-DATEN (Jetzt mit Uhrzeit, falls vorhanden)
+        // --- NEU: UHRZEIT ---
         const timeDisplay = post.time ? ` um ${post.time} Uhr` : "";
-        html += `<p class="meta">${post.date}${timeDisplay} · von ${post.author}</p>`;
+        html += `<p class="meta">${post.date}${timeDisplay} · von ${post.author || 'n-km'}</p>`;
         
-        // 3. BILD-LOGIK (Bleibt bestehen, passt zum Editor)
+        // Bild-Logik (bleibt, nutzt jetzt den Titel als Alt-Text)
         if(post.image) {
             html += `<img src="${post.image}" alt="${post.title}" class="article-image">`;
         }
         
-        html += `<p>${post.text}</p>`;
-        
+        html += `<div class="post-text">${post.text}</div>`;
         article.innerHTML = html;
         container.appendChild(article);
     });
+}
 
     const dropdown = document.querySelector('.category-dropdown');
     if (dropdown && dropdown.value !== currentCategory) {
         dropdown.value = currentCategory;
     }
-}
+
+
 
 
     fetch('data.json')
@@ -216,6 +213,15 @@
             allPosts = posts;
             renderCategories(posts);
             renderPosts(posts);
+            if (window.location.hash) {
+            const targetId = decodeURIComponent(window.location.hash.substring(1));
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                setTimeout(() => {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            }
+        }
         })
         .catch(() => {
             document.getElementById('blog-content').innerHTML = '<p>Blog-Artikel konnten nicht geladen werden.</p>';
