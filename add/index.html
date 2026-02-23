@@ -3,681 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Editor</title>
+    <title>Blog Editor | Minimal</title>
+    <link rel="stylesheet" href="../styles/geminiv1.css">
     <style>
-/* ============================================
-   MINIMAL CHATGPT-STYLE UI
-   (based on provided preset)
-   ============================================ */
+        /* --- Minimalistische Editor-Styles --- */
+        :root {
+            --primary: #007aff;
+        }
 
-/* ===== Design Tokens ===== */
-:root {
-    --bg-main: #ffffff;
-    --bg-muted: #f5f5f5;
+        .editor-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-    --text-main: #1b1b1b;
-    --text-muted: #6b6b6b;
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
 
-    --border: #d4d4d4;
+        /* Navigations-Bar */
+        .actions-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
+        button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
 
-    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
+        button:hover { background: var(--hover-bg); opacity: 0.8; }
+        button.primary { background: var(--text-color); color: var(--bg-color); border: none; font-weight: 500; }
 
-/* ===== Reset ===== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        /* Formular */
+        .post-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-color);
+        }
 
-/* ===== Base ===== */
-html, body {
-    height: 100%;
-    font-family: var(--font-main);
-    color: var(--text-main);
-    background: var(--bg-main);
-    line-height: 1.6;
-    padding: 10px;
-    margin: 5px;
-}
+        .input-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.75rem; margin-bottom: 4px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input[type="text"], input[type="time"], textarea {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            border-radius: 0;
+        }
 
-/* ===== Header ===== */
-header {
-    background: transparent;
-    padding: 10px 0;
-    margin-bottom: 30px;
-}
+        input:focus, textarea:focus { border-bottom-color: var(--primary); }
+        .time-row { display: flex; gap: 30px; }
 
-header h1 {
-    font-size: 1.4rem;
-    font-weight: 300;
-}
+        /* Liste */
+        .post-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-/* ===== Navigation ===== */
-nav {
-    display: flex;
-    gap: 6px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
+        .post-info h3 { margin: 0 0 4px 0; font-size: 1.1rem; font-weight: 500; }
+        .post-info p { margin: 0; font-size: 0.85rem; opacity: 0.5; }
 
-nav button {
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    font-size: 0.9rem;
-    color: var(--text-main);
-    cursor: pointer;
-}
+        .danger-text { color: #ff3b30; border: none; background: transparent; }
+        
+        #jsonData {
+            width: 100%;
+            height: 120px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            margin-top: 4rem;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            opacity: 0.4;
+            color: var(--text-color);
+        }
 
-nav button:hover {
-    background: var(--bg-muted);
-}
-
-nav button.active {
-    background: #1b1b1b;
-    color: #ffffff;
-}
-
-/* ===== Main Container ===== */
-main {
-    max-width: 900px;
-    margin: auto;
-    padding: 10px;
-}
-
-/* ===== Actions Bar ===== */
-.actions {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.actions button,
-.actions input[type="file"],
-.actions input[type="file"]::-webkit-file-upload-button {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 6px 10px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    max-width: max-content;
-}
-
-.actions button:hover,
-.actions input[type="file"]::-webkit-file-upload-button:hover {
-    background: var(--bg-muted);
-}
-
-.actions .primary {
-    background: #1b1b1b;
-    color: #ffffff;
-    border-color: #1b1b1b;
-}
-
-.actions .primary:hover {
-    opacity: 0.85;
-}
-
-/* ===== Articles ===== */
-article {
-    margin-bottom: 40px;
-    animation: fadeIn .3s ease-out;
-}
-
-article:last-child {
-    margin-bottom: 0;
-}
-strong {
-    font-weight: 600;
-}
-
-/* ===== Category Label ===== */
-.category-label {
-    display: inline-block;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-
-/* ===== Typography ===== */
-h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 6px 0 10px 0;
-    text-decoration: underline;
-}
-h3 {
-    font-weight: 500;
-}
-
-.meta {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-}
-
-/* ===== Images ===== */
-.article-image {
-    width: 100%;
-    border-radius: var(--radius-sm);
-    margin: 10px 0;
-}
-
-/* ===== Forms ===== */
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: transparent;
-    font-size: 0.9rem;
-    outline: none;
-    resize: vertical;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #1b1b1b;
-}
-
-textarea {
-    min-height: 120px;
-}
-
-/* ===== Buttons ===== */
-button {
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-button:hover {
-    background: var(--bg-muted);
-}
-
-button.primary {
-    background: #1b1b1b;
-    color: #ffffff;
-    border-radius: 999px;
-    padding: 6px 14px;
-}
-
-button.primary:hover {
-    opacity: 0.85;
-}
-
-/* ===== Footer ===== */
-footer {
-    margin-top: 50px;
-    padding: 10px 0;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-}
-
-/* ===== Animations ===== */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== Mobile Responsive ===== */
-@media (max-width: 640px) {
-
-    main {
-        padding: 0;
-    }
-
-    header h1 {
-        font-size: 1.2rem;
-    }
-
-    .actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .actions button,
-    .actions input[type="file"]::-webkit-file-upload-button {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-
-
+        #message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+        .success { background: #34c759; color: white; }
+        .error { background: #ff3b30; color: white; }
     </style>
 </head>
 <body>
-    <h1>Blog Editor</h1>
+    <div class="editor-container">
+        <header class="header-flex">
+            <h1>Editor</h1>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round">
+                        <span class="icon sun">☀️</span>
+                        <span class="icon moon">🌙</span>
+                    </div>
+                </label>
+            </div>
+        </header>
 
-    <div class="actions">
-        <a href="../index.html"><button>Zurück</button></a>
-        <button id="loadData">Daten laden</button>
-        <input type="file" id="fileInput" class="file-input" accept=".json">
-        <button id="importData">Importieren</button>
-        <button id="saveData">Daten speichern</button>
-        <button id="generateRSS">RSS generieren</button>
-        <button id="addPost">Neuen Post hinzufügen</button>
-    </div>
+        <nav class="actions-bar">
+            <button onclick="location.href='../index.html'">← Blog</button>
+            <button id="addPost" class="primary">+ Neuer Beitrag</button>
+            <button id="loadData">Daten laden</button>
+            <button id="importData">Import</button>
+            <button id="saveData">JSON Speichern</button>
+            <button id="generateRSS">RSS</button>
+            <input type="file" id="fileInput" style="display: none;" accept=".json">
+        </nav>
 
-    <div id="postFormContainer" class="post-form" style="display: none;">
-        <h2>Neuen Post erstellen</h2>
-        <input type="text" id="postTitle" placeholder="Titel">
-        <div class="time-input">
-            <input type="text" id="postDate" placeholder="Datum (z.B. 01. Januar 2025)" value="">
-            <span>um</span>
-            <input type="time" id="postTime" value="12:00">
+        <div id="postFormContainer" class="post-form" style="display: none;">
+            <div class="input-group">
+                <label>Titel</label>
+                <input type="text" id="postTitle" placeholder="Titel eingeben...">
+            </div>
+            
+            <div class="time-row">
+                <div class="input-group" style="flex: 2;">
+                    <label>Datum</label>
+                    <input type="text" id="postDate">
+                </div>
+                <div class="input-group" style="flex: 1;">
+                    <label>Uhrzeit</label>
+                    <input type="time" id="postTime" value="12:00">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Autor</label>
+                <input type="text" id="postAuthor" value="n-km">
+            </div>
+
+            <div class="input-group">
+                <label>Kategorie</label>
+                <input type="text" id="postCategory" placeholder="z.B. 🌱 Pflanzen">
+            </div>
+
+            <div class="input-group">
+                <label>Bild-URL (Optional)</label>
+                <input type="text" id="postImage">
+            </div>
+
+            <div class="input-group">
+                <label>Inhalt (HTML erlaubt)</label>
+                <textarea id="postText" rows="8" placeholder="Schreibe etwas..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <button id="savePost" class="primary">Speichern</button>
+                <button id="cancelPost">Abbrechen</button>
+            </div>
         </div>
-        <input type="text" id="postAuthor" placeholder="Autor" value="n-km">
-        <input type="text" id="postCategory" placeholder="Kategorie (z.B. 🌱 Pflanzen)">
-        <input type="text" id="postImage" placeholder="Bild-URL (optional)">
-        <textarea id="postText" placeholder="Text (HTML erlaubt)"></textarea>
-        <button id="savePost">Post speichern</button>
-        <button id="cancelPost">Abbrechen</button>
+
+        <div id="postsList"></div>
+
+        <div id="rssPreview" style="display: none; margin-top: 2rem;">
+            <h3>RSS Vorschau</h3>
+            <textarea id="rssContent" style="height: 150px; font-family: monospace;"></textarea>
+            <button id="downloadRSS" class="primary">XML Download</button>
+        </div>
+
+        <textarea id="jsonData" readonly></textarea>
+        <div id="message"></div>
     </div>
-
-    <div id="postsList" class="posts-list"></div>
-
-    <textarea id="jsonData" placeholder="JSON-Daten werden hier angezeigt..."></textarea>
-
-    <div id="rssPreview" class="preview" style="display: none;">
-        <h2>RSS Vorschau</h2>
-        <div id="rssContent"></div>
-        <button id="downloadRSS">RSS herunterladen</button>
-    </div>
-
-    <div id="message"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const jsonData = document.getElementById('jsonData');
-            const loadDataBtn = document.getElementById('loadData');
-            const importDataBtn = document.getElementById('importData');
-            const fileInput = document.getElementById('fileInput');
-            const saveDataBtn = document.getElementById('saveData');
-            const generateRSSBtn = document.getElementById('generateRSS');
-            const addPostBtn = document.getElementById('addPost');
+            // Elemente
             const postFormContainer = document.getElementById('postFormContainer');
-            const savePostBtn = document.getElementById('savePost');
-            const cancelPostBtn = document.getElementById('cancelPost');
+            const jsonData = document.getElementById('jsonData');
             const postsList = document.getElementById('postsList');
+            const messageDiv = document.getElementById('message');
+            const fileInput = document.getElementById('fileInput');
             const rssPreview = document.getElementById('rssPreview');
             const rssContent = document.getElementById('rssContent');
-            const downloadRSSBtn = document.getElementById('downloadRSS');
-            const messageDiv = document.getElementById('message');
-
+            
             const LOCAL_STORAGE_KEY = 'blog_posts_data';
             let currentPosts = [];
             let editingIndex = -1;
 
-            // Initial Daten laden
+            // --- Initialisierung ---
             function init() {
-                // Versuche, Daten aus localStorage zu laden
                 const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (savedData) {
-                    try {
-                        currentPosts = JSON.parse(savedData);
-                        jsonData.value = JSON.stringify(currentPosts, null, 2);
-                        renderPostsList();
-                        showMessage('Daten aus dem Browserspeicher geladen', 'success');
-                    } catch (e) {
-                        showMessage('Fehler beim Laden der gespeicherten Daten', 'error');
-                    }
+                    currentPosts = JSON.parse(savedData);
+                    render();
+                } else {
+                    loadDataFromFile();
                 }
-
-                // Versuche, data.json zu laden
-                loadDataFromFile();
             }
 
-            // Daten aus data.json laden
             function loadDataFromFile() {
                 fetch('../data.json')
-                    .then(response => {
-                        if (!response.ok) throw new Error('Datei nicht gefunden');
-                        return response.json();
-                    })
+                    .then(res => res.json())
                     .then(data => {
                         currentPosts = data;
-                        jsonData.value = JSON.stringify(data, null, 2);
-                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-                        renderPostsList();
-                        showMessage('Daten erfolgreich aus data.json geladen', 'success');
+                        render();
+                        showMessage('Daten aus data.json geladen', 'success');
                     })
-                    .catch(error => {
-                        console.log('data.json nicht gefunden oder Fehler beim Laden:', error);
-                    });
+                    .catch(() => showMessage('Keine data.json gefunden', 'error'));
             }
 
-            // Daten laden Button
-            loadDataBtn.addEventListener('click', loadDataFromFile);
+            function render() {
+                jsonData.value = JSON.stringify(currentPosts, null, 2);
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentPosts));
+                renderPostsList();
+            }
 
-            // Daten importieren
-            importDataBtn.addEventListener('click', function() {
-                fileInput.click();
-            });
-
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        currentPosts = data;
-                        jsonData.value = JSON.stringify(data, null, 2);
-                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-                        renderPostsList();
-                        showMessage('Daten erfolgreich importiert', 'success');
-                    } catch (error) {
-                        showMessage('Fehler beim Parsen der JSON-Datei: ' + error, 'error');
-                    }
-                };
-                reader.readAsText(file);
-            });
-
-            // Daten speichern
-            saveDataBtn.addEventListener('click', function() {
-                try {
-                    const data = JSON.parse(jsonData.value);
-                    currentPosts = data;
-                    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
-
-                    // Erstelle einen Blob mit den Daten
-                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-
-                    // Erstelle einen Download-Link
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'data.json';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-
-                    showMessage('Daten erfolgreich gespeichert und als data.json heruntergeladen', 'success');
-                    renderPostsList();
-                } catch (error) {
-                    showMessage('Fehler beim Parsen der JSON-Daten: ' + error, 'error');
+            function renderPostsList() {
+                postsList.innerHTML = '<h2>Beiträge</h2>';
+                if (currentPosts.length === 0) {
+                    postsList.innerHTML += '<p>Keine Einträge.</p>';
+                    return;
                 }
-            });
+                currentPosts.forEach((post, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'post-card';
+                    div.innerHTML = `
+                        <div class="post-info">
+                            <h3>${post.title}</h3>
+                            <p>${post.date} • ${post.category}</p>
+                        </div>
+                        <div>
+                            <button onclick="editPost(${index})">Edit</button>
+                            <button class="danger-text" onclick="deletePost(${index})">Löschen</button>
+                        </div>
+                    `;
+                    postsList.appendChild(div);
+                });
+            }
 
-            // RSS generieren
-            generateRSSBtn.addEventListener('click', function() {
-                try {
-                    const data = currentPosts.length > 0 ? currentPosts : JSON.parse(jsonData.value);
-                    const rss = generateRSS(data);
-                    rssContent.textContent = rss;
-                    rssPreview.style.display = 'block';
-                    showMessage('RSS erfolgreich generiert', 'success');
-                } catch (error) {
-                    showMessage('Fehler beim Generieren des RSS-Feeds: ' + error, 'error');
+            // --- Formular Handling ---
+            window.editPost = (index) => {
+                editingIndex = index;
+                const post = currentPosts[index];
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postDate').value = post.date;
+                document.getElementById('postAuthor').value = post.author;
+                document.getElementById('postCategory').value = post.category;
+                document.getElementById('postImage').value = post.image || '';
+                document.getElementById('postText').value = post.text;
+                
+                if (post.rssDate) {
+                    const d = new Date(post.rssDate);
+                    document.getElementById('postTime').value = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
                 }
-            });
-
-            // RSS herunterladen
-            downloadRSSBtn.addEventListener('click', function() {
-                const rss = rssContent.textContent;
-                const blob = new Blob([rss], { type: 'application/xml' });
-                const url = URL.createObjectURL(blob);
-
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'rss.xml';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                showMessage('RSS erfolgreich als rss.xml heruntergeladen', 'success');
-            });
-
-            // Post hinzufügen Formular anzeigen
-            addPostBtn.addEventListener('click', function() {
-                editingIndex = -1;
-                document.getElementById('postTitle').value = '';
-                document.getElementById('postDate').value = getCurrentDate();
-                document.getElementById('postTime').value = '12:00';
-                document.getElementById('postAuthor').value = 'n-km';
-                document.getElementById('postCategory').value = '';
-                document.getElementById('postImage').value = '';
-                document.getElementById('postText').value = '';
+                
                 postFormContainer.style.display = 'block';
-            });
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            };
 
-            // Post speichern
-            savePostBtn.addEventListener('click', function() {
-                const dateStr = document.getElementById('postDate').value;
-                const timeStr = document.getElementById('postTime').value;
+            window.deletePost = (index) => {
+                if (confirm('Löschen?')) {
+                    currentPosts.splice(index, 1);
+                    render();
+                    showMessage('Gelöscht', 'success');
+                }
+            };
 
-                // Kombiniere Datum und Uhrzeit für RSS
-                const rssDate = combineDateTimeForRSS(dateStr, timeStr);
+            document.getElementById('savePost').addEventListener('click', () => {
+                const title = document.getElementById('postTitle').value;
+                const date = document.getElementById('postDate').value;
+                const time = document.getElementById('postTime').value;
+                
+                if(!title || !date) return showMessage('Titel und Datum fehlen', 'error');
 
                 const post = {
-                    title: document.getElementById('postTitle').value,
-                    date: dateStr, // Nur das Datum für die Anzeige
-                    rssDate: rssDate, // Vollständiges Datum+Uhrzeit für RSS
+                    title,
+                    date,
+                    rssDate: combineDateTimeForRSS(date, time),
                     author: document.getElementById('postAuthor').value,
                     category: document.getElementById('postCategory').value,
                     image: document.getElementById('postImage').value,
                     text: document.getElementById('postText').value
                 };
 
-                if (!post.title || !post.date || !post.author || !post.category || !post.text) {
-                    showMessage('Bitte füllen Sie alle erforderlichen Felder aus', 'error');
-                    return;
-                }
+                if (editingIndex > -1) currentPosts[editingIndex] = post;
+                else currentPosts.unshift(post);
 
-                if (editingIndex === -1) {
-                    currentPosts.unshift(post); // Neuen Post am Anfang einfügen
-                } else {
-                    currentPosts[editingIndex] = post; // Existierenden Post aktualisieren
-                }
-
-                jsonData.value = JSON.stringify(currentPosts, null, 2);
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentPosts));
+                editingIndex = -1;
                 postFormContainer.style.display = 'none';
-                renderPostsList();
-                showMessage('Post erfolgreich gespeichert', 'success');
+                render();
+                showMessage('Gespeichert', 'success');
             });
 
-            // Post bearbeiten abbrechen
-            cancelPostBtn.addEventListener('click', function() {
-                postFormContainer.style.display = 'none';
-            });
-
-            // Posts Liste rendern
-            function renderPostsList() {
-                postsList.innerHTML = '<h2>Posts</h2>';
-
-                if (currentPosts.length === 0) {
-                    postsList.innerHTML += '<p>Keine Posts vorhanden</p>';
-                    return;
-                }
-
-                currentPosts.forEach((post, index) => {
-                    const postItem = document.createElement('div');
-                    postItem.className = 'post-item';
-
-                    let html = `<h3>${post.title}</h3>`;
-                    html += `<p><strong>Datum:</strong> ${post.date}</p>`;
-                    html += `<p><strong>Kategorie:</strong> ${post.category}</p>`;
-                    if (post.image) {
-                        html += `<p><strong>Bild:</strong> ${post.image}</p>`;
-                    }
-                    html += `<button class="edit-post" data-index="${index}">Bearbeiten</button>`;
-                    html += `<button class="delete-post" data-index="${index}">Löschen</button>`;
-
-                    postItem.innerHTML = html;
-                    postsList.appendChild(postItem);
-                });
-
-                // Bearbeiten-Buttons
-                document.querySelectorAll('.edit-post').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        editingIndex = parseInt(this.dataset.index);
-                        const post = currentPosts[editingIndex];
-
-                        document.getElementById('postTitle').value = post.title;
-                        document.getElementById('postDate').value = post.date;
-
-                        // Wenn vorhanden, die gespeicherte RSS-Zeit verwenden
-                        if (post.rssDate) {
-                            const dateObj = new Date(post.rssDate);
-                            const hours = String(dateObj.getHours()).padStart(2, '0');
-                            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                            document.getElementById('postTime').value = `${hours}:${minutes}`;
-                        } else {
-                            document.getElementById('postTime').value = '12:00';
-                        }
-
-                        document.getElementById('postAuthor').value = post.author;
-                        document.getElementById('postCategory').value = post.category;
-                        document.getElementById('postImage').value = post.image || '';
-                        document.getElementById('postText').value = post.text;
-
-                        postFormContainer.style.display = 'block';
-                    });
-                });
-
-                // Löschen-Buttons
-                document.querySelectorAll('.delete-post').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const index = parseInt(this.dataset.index);
-                        if (confirm('Möchten Sie diesen Post wirklich löschen?')) {
-                            currentPosts.splice(index, 1);
-                            jsonData.value = JSON.stringify(currentPosts, null, 2);
-                            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentPosts));
-                            renderPostsList();
-                            showMessage('Post erfolgreich gelöscht', 'success');
-                        }
-                    });
-                });
+            // --- Utility ---
+            function getCurrentDate() {
+                const now = new Date();
+                const m = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+                return `${now.getDate().toString().padStart(2,'0')}. ${m[now.getMonth()]} ${now.getFullYear()}`;
             }
 
-            // Kombiniere Datum und Uhrzeit für RSS
             function combineDateTimeForRSS(dateStr, timeStr) {
-                const [hours, minutes] = timeStr.split(':').map(Number);
-                const m = dateStr.match(/(\d{2})\. (\w+) (\d{4})/);
-
-                if (m) {
-                    const months = {
-                        "Januar": "01","Februar": "02","März": "03","April": "04","Mai": "05","Juni": "06",
-                        "Juli": "07","August": "08","September": "09","Oktober": "10","November": "11","Dezember": "12"
-                    };
-                    const [_, day, monthName, year] = m;
-                    const month = months[monthName] || "01";
-
-                    // Erstelle ein Date-Objekt mit der lokalen Zeit
-                    const date = new Date(`${year}-${month}-${day}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
-
-                    // Konvertiere in UTC und gib RFC822-String zurück
+                const [h, m] = timeStr.split(':').map(Number);
+                const match = dateStr.match(/(\d{2})\. (\w+) (\d{4})/);
+                if (match) {
+                    const months = {"Januar":"01","Februar":"02","März":"03","April":"04","Mai":"05","Juni":"06","Juli":"07","August":"08","September":"09","Oktober":"10","November":"11","Dezember":"12"};
+                    const date = new Date(`${match[3]}-${months[match[2]]}-${match[1]}T${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:00`);
                     return date.toUTCString();
                 }
-
                 return new Date().toUTCString();
             }
 
-            // RSS generieren Funktion
-            function generateRSS(posts) {
-                function escapeXml(str) {
-                    return (str || "")
-                        .replace(/&/g, "&amp;")
-                        .replace(/</g, "&lt;")
-                        .replace(/>/g, "&gt;")
-                        .replace(/"/g, "&quot;")
-                        .replace(/'/g, "&apos;");
-                }
-
-                const items = posts.map(post => {
-                    if (!post.title) return '';
-
-                    // Verwende rssDate falls vorhanden, sonst versuche das Datum zu parsen
-                    const pubDate = post.rssDate || dateToRFC822(post.date);
-
-                    return `
-                        <item>
-                            <title>${escapeXml(post.title)}</title>
-                            <link>https://n-km.github.io/blog/#${encodeURIComponent(post.title.replace(/\s+/g, '-').toLowerCase())}</link>
-                            <description><![CDATA[${post.text || ""}${post.image ? `<br><img src="${post.image}">` : ""}]]></description>
-                            <pubDate>${pubDate}</pubDate>
-                            <category>${escapeXml(post.category.replace(/[🐝🌱📢]/g, '').trim() || "")}</category>
-                            <author>${escapeXml(post.author || "")}</author>
-                        </item>
-                    `.trim();
-                }).join('\n');
-
-                return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <title>Minimal Blog | n-km</title>
-    <link>https://n-km.github.io/blog/</link>
-    <description>RSS-Feed aus data.json</description>
-    <language>de-de</language>
-    <generator>generate-rss.js</generator>
-    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    ${items}
-  </channel>
-</rss>`;
-            }
-
-            // Hilfsfunktion für Datumskonvertierung (für bestehende Posts)
-            function dateToRFC822(d) {
-                if (!d) return new Date().toUTCString();
-                const m = d.match(/(\d{2})\. (\w+) (\d{4})/);
-                if (m) {
-                    const months = {
-                        "Januar": "01","Februar": "02","März": "03","April": "04","Mai": "05","Juni": "06",
-                        "Juli": "07","August": "08","September": "09","Oktober": "10","November": "11","Dezember": "12"
-                    };
-                    const [_, day, monthName, year] = m;
-                    const month = months[monthName] || "01";
-                    return new Date(`${year}-${month}-${day}T12:00:00+02:00`).toUTCString();
-                }
-                return new Date(d).toUTCString();
-            }
-
-            // Aktuelles Datum im deutschen Format
-            function getCurrentDate() {
-                const now = new Date();
-                const months = [
-                    "Januar", "Februar", "März", "April", "Mai", "Juni",
-                    "Juli", "August", "September", "Oktober", "November", "Dezember"
-                ];
-                const day = now.getDate().toString().padStart(2, '0');
-                const month = months[now.getMonth()];
-                const year = now.getFullYear();
-                return `${day}. ${month} ${year}`;
-            }
-
-            // Nachricht anzeigen
             function showMessage(msg, type) {
                 messageDiv.textContent = msg;
                 messageDiv.className = type;
-                setTimeout(() => {
-                    messageDiv.textContent = '';
-                    messageDiv.className = '';
-                }, 3000);
+                setTimeout(() => messageDiv.className = '', 3000);
             }
 
-            // Initialisierung
+            // --- Events ---
+            document.getElementById('addPost').addEventListener('click', () => {
+                editingIndex = -1;
+                document.querySelectorAll('.post-form input, .post-form textarea').forEach(i => i.value = '');
+                document.getElementById('postDate').value = getCurrentDate();
+                document.getElementById('postTime').value = "12:00";
+                document.getElementById('postAuthor').value = "n-km";
+                postFormContainer.style.display = 'block';
+            });
+
+            document.getElementById('cancelPost').addEventListener('click', () => postFormContainer.style.display = 'none');
+
+            document.getElementById('importData').addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', e => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentPosts = JSON.parse(e.target.result);
+                    render();
+                    showMessage('Importiert', 'success');
+                };
+                reader.readAsText(e.target.files[0]);
+            });
+
+            document.getElementById('saveData').addEventListener('click', () => {
+                const blob = new Blob([JSON.stringify(currentPosts, null, 2)], {type: 'application/json'});
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'data.json';
+                a.click();
+            });
+
+            document.getElementById('generateRSS').addEventListener('click', () => {
+                const rss = generateRSS(currentPosts);
+                rssContent.value = rss;
+                rssPreview.style.display = 'block';
+            });
+
+            document.getElementById('downloadRSS').addEventListener('click', () => {
+                const blob = new Blob([rssContent.value], {type: 'application/xml'});
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'rss.xml';
+                a.click();
+            });
+
+            // --- RSS Generator ---
+            function generateRSS(posts) {
+                const items = posts.map(p => `
+        <item>
+            <title>${p.title}</title>
+            <link>https://n-km.github.io/blog/</link>
+            <description><![CDATA[${p.text}]]></description>
+            <pubDate>${p.rssDate || new Date().toUTCString()}</pubDate>
+            <category>${(p.category || "").replace(/[🌱🌱📢]/g, '').trim()}</category>
+        </item>`).join('');
+
+                return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Minimal Blog</title>
+        <link>https://n-km.github.io/blog/</link>
+        <description>RSS Feed</description>
+        ${items}
+    </channel>
+</rss>`;
+            }
+
+            // --- Theme Switch ---
+            const toggleSwitch = document.querySelector('#checkbox');
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            toggleSwitch.checked = theme === 'dark';
+
+            toggleSwitch.addEventListener('change', e => {
+                const newTheme = e.target.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+
             init();
         });
     </script>
