@@ -6,113 +6,30 @@
     <title>Blog Editor | Minimal</title>
     <link rel="stylesheet" href="../styles/geminiv1.css">
     <style>
-        /* --- Minimalistische Editor-Styles --- */
-        :root {
-            --primary: #007aff;
-        }
-
-        .editor-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        /* Navigations-Bar */
-        .actions-bar {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        button {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-        }
-
-        button:hover { background: var(--hover-bg); opacity: 0.8; }
-        button.primary { background: var(--text-color); color: var(--bg-color); border: none; font-weight: 500; }
-
-        /* Formular */
-        .post-form {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 3rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .input-group { margin-bottom: 1.5rem; }
-        label { display: block; font-size: 0.75rem; margin-bottom: 4px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+        :root { --primary: #007aff; }
+        .editor-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         
-        input[type="text"], input[type="time"], textarea {
-            width: 100%;
-            padding: 10px 0;
-            border: none;
-            border-bottom: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-color);
-            font-size: 1rem;
-            outline: none;
-            border-radius: 0;
-        }
+        .actions-bar { display: flex; gap: 10px; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+        
+        button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: 0.2s; }
+        button:hover { opacity: 0.8; }
+        button.primary { background: var(--text-color); color: var(--bg-color); border: none; }
 
+        .post-form { background: var(--card-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .input-group { margin-bottom: 1.2rem; }
+        label { display: block; font-size: 0.7rem; margin-bottom: 4px; opacity: 0.6; text-transform: uppercase; }
+        
+        input, textarea { width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid var(--border-color); background: transparent; color: var(--text-color); outline: none; }
         input:focus, textarea:focus { border-bottom-color: var(--primary); }
-        .time-row { display: flex; gap: 30px; }
 
-        /* Liste */
-        .post-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
+        .post-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .danger { color: #ff3b30; border: none; background: transparent; }
 
-        .post-info h3 { margin: 0 0 4px 0; font-size: 1.1rem; font-weight: 500; }
-        .post-info p { margin: 0; font-size: 0.85rem; opacity: 0.5; }
-
-        .danger-text { color: #ff3b30; border: none; background: transparent; }
+        .code-area { position: relative; margin-top: 2rem; }
+        .copy-badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; }
         
-        #jsonData {
-            width: 100%;
-            height: 120px;
-            font-family: monospace;
-            font-size: 0.75rem;
-            margin-top: 4rem;
-            padding: 10px;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            opacity: 0.4;
-            color: var(--text-color);
-        }
-
-        #message {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            z-index: 1000;
-        }
-        .success { background: #34c759; color: white; }
-        .error { background: #ff3b30; color: white; }
+        #message { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; display: none; background: #34c759; color: white; }
     </style>
 </head>
 <body>
@@ -120,306 +37,141 @@
         <header class="header-flex">
             <h1>Editor</h1>
             <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                <label class="theme-switch">
+                    <input type="checkbox" id="checkbox">
                     <div class="slider round">
-                        <span class="icon sun">☀️</span>
-                        <span class="icon moon">🌙</span>
+                        <span class="icon">☀️</span>
+                        <span class="icon">🌙</span>
                     </div>
                 </label>
             </div>
         </header>
 
         <nav class="actions-bar">
-            <button onclick="location.href='../index.html'">← Blog</button>
-            <button id="addPost" class="primary">+ Neuer Beitrag</button>
-            <button id="loadData">Daten laden</button>
-            <button id="importData">Import</button>
-            <button id="saveData">JSON Speichern</button>
-            <button id="generateRSS">RSS</button>
-            <input type="file" id="fileInput" style="display: none;" accept=".json">
+            <button onclick="location.href='../index.html'">Zurück</button>
+            <button id="addPost" class="primary">Neuer Post</button>
+            <button id="saveData">JSON Download</button>
+            <button id="generateRSS">RSS Erstellen</button>
         </nav>
 
         <div id="postFormContainer" class="post-form" style="display: none;">
-            <div class="input-group">
-                <label>Titel</label>
-                <input type="text" id="postTitle" placeholder="Titel eingeben...">
+            <div class="input-group"><label>Titel</label><input type="text" id="postTitle" placeholder="Beispiel: Mein neuer Blogpost"></div>
+            <div style="display: flex; gap: 20px;">
+                <div class="input-group" style="flex: 2;"><label>Datum</label><input type="text" id="postDate" placeholder="23. Februar 2026"></div>
+                <div class="input-group" style="flex: 1;"><label>Zeit</label><input type="time" id="postTime" value="12:00"></div>
             </div>
-            
-            <div class="time-row">
-                <div class="input-group" style="flex: 2;">
-                    <label>Datum</label>
-                    <input type="text" id="postDate">
-                </div>
-                <div class="input-group" style="flex: 1;">
-                    <label>Uhrzeit</label>
-                    <input type="time" id="postTime" value="12:00">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Autor</label>
-                <input type="text" id="postAuthor" value="n-km">
-            </div>
-
-            <div class="input-group">
-                <label>Kategorie</label>
-                <input type="text" id="postCategory" placeholder="z.B. 🌱 Pflanzen">
-            </div>
-
-            <div class="input-group">
-                <label>Bild-URL (Optional)</label>
-                <input type="text" id="postImage">
-            </div>
-
-            <div class="input-group">
-                <label>Inhalt (HTML erlaubt)</label>
-                <textarea id="postText" rows="8" placeholder="Schreibe etwas..."></textarea>
-            </div>
-
-            <div style="display: flex; gap: 12px;">
-                <button id="savePost" class="primary">Speichern</button>
-                <button id="cancelPost">Abbrechen</button>
-            </div>
+            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory" placeholder="Allgemein"></div>
+            <div class="input-group"><label>Inhalt</label><textarea id="postText" rows="5" placeholder="Hier den Text schreiben..."></textarea></div>
+            <button id="savePost" class="primary">Speichern</button>
+            <button onclick="document.getElementById('postFormContainer').style.display='none'">Abbrechen</button>
         </div>
 
         <div id="postsList"></div>
 
-        <div id="rssPreview" style="display: none; margin-top: 2rem;">
-            <h3>RSS Vorschau</h3>
-            <textarea id="rssContent" style="height: 150px; font-family: monospace;"></textarea>
-            <button id="downloadRSS" class="primary">XML Download</button>
+        <div class="code-area">
+            <span class="copy-badge" onclick="copyToClipboard('jsonData')">Kopieren</span>
+            <label>JSON Daten</label>
+            <textarea id="jsonData" readonly style="height: 100px; font-family: monospace; font-size: 0.8rem; opacity: 0.6;"></textarea>
         </div>
 
-        <textarea id="jsonData" readonly></textarea>
-        <div id="message"></div>
+        <div id="rssSection" class="code-area" style="display: none;">
+            <span class="copy-badge" onclick="copyToClipboard('rssContent')">Kopieren</span>
+            <label>RSS Feed</label>
+            <textarea id="rssContent" readonly style="height: 100px; font-family: monospace; font-size: 0.8rem;"></textarea>
+        </div>
+
+        <div id="message">Kopiert!</div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elemente
-            const postFormContainer = document.getElementById('postFormContainer');
-            const jsonData = document.getElementById('jsonData');
-            const postsList = document.getElementById('postsList');
-            const messageDiv = document.getElementById('message');
-            const fileInput = document.getElementById('fileInput');
-            const rssPreview = document.getElementById('rssPreview');
-            const rssContent = document.getElementById('rssContent');
-            
-            const LOCAL_STORAGE_KEY = 'blog_posts_data';
-            let currentPosts = [];
-            let editingIndex = -1;
+        let posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+        let editIdx = -1;
 
-            // --- Initialisierung ---
-            function init() {
-                const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-                if (savedData) {
-                    currentPosts = JSON.parse(savedData);
-                    render();
-                } else {
-                    loadDataFromFile();
-                }
-            }
+        function render() {
+            const list = document.getElementById('postsList');
+            list.innerHTML = '<h2>Beiträge</h2>';
+            posts.forEach((p, i) => {
+                list.innerHTML += `<div class="post-card">
+                    <div><b>${p.title}</b><br><small>${p.date} | ${p.category}</small></div>
+                    <div>
+                        <button onclick="edit(${i})">Edit</button>
+                        <button class="danger" onclick="del(${i})">Löschen</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('jsonData').value = JSON.stringify(posts, null, 2);
+            localStorage.setItem('blog_posts', JSON.stringify(posts));
+        }
 
-            function loadDataFromFile() {
-                fetch('../data.json')
-                    .then(res => res.json())
-                    .then(data => {
-                        currentPosts = data;
-                        render();
-                        showMessage('Daten aus data.json geladen', 'success');
-                    })
-                    .catch(() => showMessage('Keine data.json gefunden', 'error'));
-            }
+        document.getElementById('addPost').onclick = () => {
+            editIdx = -1;
+            document.querySelectorAll('input, textarea').forEach(i => i.value = '');
+            document.getElementById('postDate').value = new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'long', year:'numeric'});
+            document.getElementById('postTime').value = "12:00";
+            document.getElementById('postFormContainer').style.display = 'block';
+        };
 
-            function render() {
-                jsonData.value = JSON.stringify(currentPosts, null, 2);
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentPosts));
-                renderPostsList();
-            }
-
-            function renderPostsList() {
-                postsList.innerHTML = '<h2>Beiträge</h2>';
-                if (currentPosts.length === 0) {
-                    postsList.innerHTML += '<p>Keine Einträge.</p>';
-                    return;
-                }
-                currentPosts.forEach((post, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'post-card';
-                    div.innerHTML = `
-                        <div class="post-info">
-                            <h3>${post.title}</h3>
-                            <p>${post.date} • ${post.category}</p>
-                        </div>
-                        <div>
-                            <button onclick="editPost(${index})">Edit</button>
-                            <button class="danger-text" onclick="deletePost(${index})">Löschen</button>
-                        </div>
-                    `;
-                    postsList.appendChild(div);
-                });
-            }
-
-            // --- Formular Handling ---
-            window.editPost = (index) => {
-                editingIndex = index;
-                const post = currentPosts[index];
-                document.getElementById('postTitle').value = post.title;
-                document.getElementById('postDate').value = post.date;
-                document.getElementById('postAuthor').value = post.author;
-                document.getElementById('postCategory').value = post.category;
-                document.getElementById('postImage').value = post.image || '';
-                document.getElementById('postText').value = post.text;
-                
-                if (post.rssDate) {
-                    const d = new Date(post.rssDate);
-                    document.getElementById('postTime').value = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
-                }
-                
-                postFormContainer.style.display = 'block';
-                window.scrollTo({top: 0, behavior: 'smooth'});
+        document.getElementById('savePost').onclick = () => {
+            const p = {
+                title: document.getElementById('postTitle').value,
+                date: document.getElementById('postDate').value,
+                category: document.getElementById('postCategory').value,
+                text: document.getElementById('postText').value,
+                time: document.getElementById('postTime').value
             };
+            if(editIdx > -1) posts[editIdx] = p; else posts.unshift(p);
+            document.getElementById('postFormContainer').style.display = 'none';
+            render();
+        };
 
-            window.deletePost = (index) => {
-                if (confirm('Löschen?')) {
-                    currentPosts.splice(index, 1);
-                    render();
-                    showMessage('Gelöscht', 'success');
-                }
-            };
+        window.edit = (i) => {
+            editIdx = i;
+            const p = posts[i];
+            document.getElementById('postTitle').value = p.title;
+            document.getElementById('postDate').value = p.date;
+            document.getElementById('postCategory').value = p.category;
+            document.getElementById('postText').value = p.text;
+            document.getElementById('postTime').value = p.time || "12:00";
+            document.getElementById('postFormContainer').style.display = 'block';
+        };
 
-            document.getElementById('savePost').addEventListener('click', () => {
-                const title = document.getElementById('postTitle').value;
-                const date = document.getElementById('postDate').value;
-                const time = document.getElementById('postTime').value;
-                
-                if(!title || !date) return showMessage('Titel und Datum fehlen', 'error');
+        window.del = (i) => { if(confirm('Löschen?')) { posts.splice(i, 1); render(); } };
 
-                const post = {
-                    title,
-                    date,
-                    rssDate: combineDateTimeForRSS(date, time),
-                    author: document.getElementById('postAuthor').value,
-                    category: document.getElementById('postCategory').value,
-                    image: document.getElementById('postImage').value,
-                    text: document.getElementById('postText').value
-                };
+        window.copyToClipboard = (id) => {
+            const el = document.getElementById(id);
+            el.select();
+            document.execCommand('copy');
+            const msg = document.getElementById('message');
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 2000);
+        };
 
-                if (editingIndex > -1) currentPosts[editingIndex] = post;
-                else currentPosts.unshift(post);
+        document.getElementById('generateRSS').onclick = () => {
+            const items = posts.map(p => `<item><title>${p.title}</title><description>${p.text}</description><pubDate>${p.date}</pubDate></item>`).join('');
+            document.getElementById('rssContent').value = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Blog</title>${items}</channel></rss>`;
+            document.getElementById('rssSection').style.display = 'block';
+        };
 
-                editingIndex = -1;
-                postFormContainer.style.display = 'none';
-                render();
-                showMessage('Gespeichert', 'success');
-            });
+        document.getElementById('saveData').onclick = () => {
+            const blob = new Blob([JSON.stringify(posts, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'data.json';
+            a.click();
+        };
 
-            // --- Utility ---
-            function getCurrentDate() {
-                const now = new Date();
-                const m = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-                return `${now.getDate().toString().padStart(2,'0')}. ${m[now.getMonth()]} ${now.getFullYear()}`;
-            }
+        // Theme Logic
+        const cb = document.getElementById('checkbox');
+        cb.onclick = () => {
+            const t = cb.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme', t);
+        };
+        const st = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', st);
+        cb.checked = st === 'dark';
 
-            function combineDateTimeForRSS(dateStr, timeStr) {
-                const [h, m] = timeStr.split(':').map(Number);
-                const match = dateStr.match(/(\d{2})\. (\w+) (\d{4})/);
-                if (match) {
-                    const months = {"Januar":"01","Februar":"02","März":"03","April":"04","Mai":"05","Juni":"06","Juli":"07","August":"08","September":"09","Oktober":"10","November":"11","Dezember":"12"};
-                    const date = new Date(`${match[3]}-${months[match[2]]}-${match[1]}T${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:00`);
-                    return date.toUTCString();
-                }
-                return new Date().toUTCString();
-            }
-
-            function showMessage(msg, type) {
-                messageDiv.textContent = msg;
-                messageDiv.className = type;
-                setTimeout(() => messageDiv.className = '', 3000);
-            }
-
-            // --- Events ---
-            document.getElementById('addPost').addEventListener('click', () => {
-                editingIndex = -1;
-                document.querySelectorAll('.post-form input, .post-form textarea').forEach(i => i.value = '');
-                document.getElementById('postDate').value = getCurrentDate();
-                document.getElementById('postTime').value = "12:00";
-                document.getElementById('postAuthor').value = "n-km";
-                postFormContainer.style.display = 'block';
-            });
-
-            document.getElementById('cancelPost').addEventListener('click', () => postFormContainer.style.display = 'none');
-
-            document.getElementById('importData').addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', e => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentPosts = JSON.parse(e.target.result);
-                    render();
-                    showMessage('Importiert', 'success');
-                };
-                reader.readAsText(e.target.files[0]);
-            });
-
-            document.getElementById('saveData').addEventListener('click', () => {
-                const blob = new Blob([JSON.stringify(currentPosts, null, 2)], {type: 'application/json'});
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'data.json';
-                a.click();
-            });
-
-            document.getElementById('generateRSS').addEventListener('click', () => {
-                const rss = generateRSS(currentPosts);
-                rssContent.value = rss;
-                rssPreview.style.display = 'block';
-            });
-
-            document.getElementById('downloadRSS').addEventListener('click', () => {
-                const blob = new Blob([rssContent.value], {type: 'application/xml'});
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'rss.xml';
-                a.click();
-            });
-
-            // --- RSS Generator ---
-            function generateRSS(posts) {
-                const items = posts.map(p => `
-        <item>
-            <title>${p.title}</title>
-            <link>https://n-km.github.io/blog/</link>
-            <description><![CDATA[${p.text}]]></description>
-            <pubDate>${p.rssDate || new Date().toUTCString()}</pubDate>
-            <category>${(p.category || "").replace(/[🌱🌱📢]/g, '').trim()}</category>
-        </item>`).join('');
-
-                return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-    <channel>
-        <title>Minimal Blog</title>
-        <link>https://n-km.github.io/blog/</link>
-        <description>RSS Feed</description>
-        ${items}
-    </channel>
-</rss>`;
-            }
-
-            // --- Theme Switch ---
-            const toggleSwitch = document.querySelector('#checkbox');
-            const theme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            toggleSwitch.checked = theme === 'dark';
-
-            toggleSwitch.addEventListener('change', e => {
-                const newTheme = e.target.checked ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-
-            init();
-        });
+        render();
     </script>
 </body>
 </html>
