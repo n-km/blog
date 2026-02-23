@@ -1,38 +1,11 @@
 [
   {
-    "title": "20261022 - TEST - No.1",
-    "date": "22. Januar 2026",
-    "rssDate": "Thu, 22 Jan 2026 10:49:00 GMT",
+    "title": "Fertigstellung des Editors",
+    "date": "2026-02-23",
+    "time": "12:40",
     "author": "n-km",
-    "category": "TEST",
-    "image": "",
-    "text": "TEST"
-  },
-  {
-    "title": "20260121 - LF9 - STP Aufgabe Packet Tracer",
-    "date": "21. Januar 2026",
-    "rssDate": "Wed, 21 Jan 2026 09:30:00 GMT",
-    "author": "n-km",
-    "category": "LF9",
-    "image": "",
-    "text": "Schritt-für-Schritt Anleitung<br>\n1. VLANs anlegen und Trunks konfigurieren<br>\nVLANs identifizieren:<br>\n<br>\nVLAN 50: Labor Programmierer<br>\nVLAN 51: Labor Netztechnik<br>\nVLAN 52: Labor CAD<br>\nVLAN 91: Drucker Netzwerk<br>\n<br>\nAuf jedem Switch (2960-24TT, 3560-24PS):<br>\nenable<br>\nconfigure terminal<br>\nvlan 50<br>\nname Labor_Programmierer<br>\nvlan 51<br>\nname Labor_Netztechnik<br>\nvlan 52<br>\nname Labor_CAD<br>\nvlan 91<br>\nname Drucker_Netzwerk<br>\nexit<br>\nTrunk-Ports konfigurieren (Verbindungen zwischen Switches):<br>\ninterface range [Port-Range zu anderen Switches]<br>\nswitchport mode trunk<br>\nswitchport trunk allowed vlan 50,51,52,91<br>\nexit<br>\n2. Root-Bridge prüfen<br>\nshow spanning-tree<br>\nNotieren Sie für jedes VLAN: Welcher Switch ist Root? (Niedrigste Bridge-ID gewinnt)<br>\n3. Überlegungen zur Root-Bridge<br>\nPrüfen Sie:<br>\n<br>\nIst der zentrale Core-Switch (3560-24PS ML-SW_Core) die Root?<br>\nHat die Root-Bridge die beste Position im Netzwerk?<br>\nSollte der leistungsstärkere Switch die Root sein?<br>\n<br>\nEmpfehlung: Der 3560-24PS ML-SW_Core sollte Root sein (zentrale Position, höhere Performance)<br>\n4. Root-Bridge manuell setzen<br>\nMethode 1 - Priority ändern:<br>\nspanning-tree vlan 50,51,52,91 priority 4096<br>\n(Niedriger Wert = höhere Priorität; Schritte von 4096)<br>\nMethode 2 - Root Primary:<br>\nspanning-tree vlan 50,51,52,91 root primary<br>\n5. Ergebnisse dokumentieren<br>\nNotieren Sie:<br>\n<br>\nAktuelle Root-Bridge pro VLAN<br>\nBridge-IDs und Priorities<br>\nIhre Konfigurationsänderungen<br>\nTopologie nach der Optimierung<br>"
-  },
-  {
-    "title": "20260120 - LF8 - Anlegen von Tabellen in der Datenbank \"test\"",
-    "date": "20. Januar 2026",
-    "rssDate": "Tue, 20 Jan 2026 11:33:00 GMT",
-    "author": "n-km",
-    "category": "LF8",
-    "image": "",
-    "text": "<code>\nCREATE TABLE T_Versicherungen(\n    p_v_nr INT,\n    name CHAR(50),\n    CONSTRAINT pk_T_Versicherungen PRIMARY KEY(p_v_nr)\n);\n\nCREATE TABLE T_Fahrzeuge(\n    p_fg_id CHAR(6),\n    modell VARCHAR(20),\n    hersteller VARCHAR(50),\n    seit DATE,\n    praemie DECIMAL(5, 2),\n    f_v_nr INT,\n    CONSTRAINT pk_T_Fahrzeuge PRIMARY KEY(p_fg_id),\n    CONSTRAINT fk_T_Fahrzeuge_Versicherungen \n        FOREIGN KEY (f_v_nr) \n        REFERENCES T_Versicherungen(p_v_nr)\n);\n</code>\n"
-  },
-  {
-    "title": "Webseite in Arbeit",
-    "date": "18. August 2025",
-    "rssDate": "Sun, 17 Aug 2025 22:00:00 GMT",
-    "author": "n-km",
-    "category": "Aktuelles",
-    "image": "",
-    "text": "Momentan wird an der Webseite gearbeitet, um den Style zu optimieren."
+    "category": "Neuigkeiten",
+    "image": "images/IMG_0011.jpeg",
+    "text": "Soeben konnte das neue Style des Editors fertiggestellt werden."
   }
 ]

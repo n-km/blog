@@ -6,107 +6,15 @@
     <description>RSS-Feed aus data.json</description>
     <language>de-de</language>
     <generator>generate-rss.js</generator>
-    <lastBuildDate>Thu, 22 Jan 2026 10:52:13 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 23 Feb 2026 11:41:14 GMT</lastBuildDate>
     <item>
-                            <title>20261022 - TEST - No.1</title>
-                            <link>https://n-km.github.io/blog/#20261022---test---no.1</link>
-                            <description><![CDATA[TEST]]></description>
-                            <pubDate>Thu, 22 Jan 2026 10:49:00 GMT</pubDate>
-                            <category>TEST</category>
-                            <author>n-km</author>
-                        </item>
-<item>
-                            <title>20260121 - LF9 - STP Aufgabe Packet Tracer</title>
-                            <link>https://n-km.github.io/blog/#20260121---lf9---stp-aufgabe-packet-tracer</link>
-                            <description><![CDATA[Schritt-für-Schritt Anleitung<br>
-1. VLANs anlegen und Trunks konfigurieren<br>
-VLANs identifizieren:<br>
-<br>
-VLAN 50: Labor Programmierer<br>
-VLAN 51: Labor Netztechnik<br>
-VLAN 52: Labor CAD<br>
-VLAN 91: Drucker Netzwerk<br>
-<br>
-Auf jedem Switch (2960-24TT, 3560-24PS):<br>
-enable<br>
-configure terminal<br>
-vlan 50<br>
-name Labor_Programmierer<br>
-vlan 51<br>
-name Labor_Netztechnik<br>
-vlan 52<br>
-name Labor_CAD<br>
-vlan 91<br>
-name Drucker_Netzwerk<br>
-exit<br>
-Trunk-Ports konfigurieren (Verbindungen zwischen Switches):<br>
-interface range [Port-Range zu anderen Switches]<br>
-switchport mode trunk<br>
-switchport trunk allowed vlan 50,51,52,91<br>
-exit<br>
-2. Root-Bridge prüfen<br>
-show spanning-tree<br>
-Notieren Sie für jedes VLAN: Welcher Switch ist Root? (Niedrigste Bridge-ID gewinnt)<br>
-3. Überlegungen zur Root-Bridge<br>
-Prüfen Sie:<br>
-<br>
-Ist der zentrale Core-Switch (3560-24PS ML-SW_Core) die Root?<br>
-Hat die Root-Bridge die beste Position im Netzwerk?<br>
-Sollte der leistungsstärkere Switch die Root sein?<br>
-<br>
-Empfehlung: Der 3560-24PS ML-SW_Core sollte Root sein (zentrale Position, höhere Performance)<br>
-4. Root-Bridge manuell setzen<br>
-Methode 1 - Priority ändern:<br>
-spanning-tree vlan 50,51,52,91 priority 4096<br>
-(Niedriger Wert = höhere Priorität; Schritte von 4096)<br>
-Methode 2 - Root Primary:<br>
-spanning-tree vlan 50,51,52,91 root primary<br>
-5. Ergebnisse dokumentieren<br>
-Notieren Sie:<br>
-<br>
-Aktuelle Root-Bridge pro VLAN<br>
-Bridge-IDs und Priorities<br>
-Ihre Konfigurationsänderungen<br>
-Topologie nach der Optimierung<br>]]></description>
-                            <pubDate>Wed, 21 Jan 2026 09:30:00 GMT</pubDate>
-                            <category>LF9</category>
-                            <author>n-km</author>
-                        </item>
-<item>
-                            <title>20260120 - LF8 - Anlegen von Tabellen in der Datenbank &quot;test&quot;</title>
-                            <link>https://n-km.github.io/blog/#20260120---lf8---anlegen-von-tabellen-in-der-datenbank-%22test%22</link>
-                            <description><![CDATA[<code>
-CREATE TABLE T_Versicherungen(
-    p_v_nr INT,
-    name CHAR(50),
-    CONSTRAINT pk_T_Versicherungen PRIMARY KEY(p_v_nr)
-);
-
-CREATE TABLE T_Fahrzeuge(
-    p_fg_id CHAR(6),
-    modell VARCHAR(20),
-    hersteller VARCHAR(50),
-    seit DATE,
-    praemie DECIMAL(5, 2),
-    f_v_nr INT,
-    CONSTRAINT pk_T_Fahrzeuge PRIMARY KEY(p_fg_id),
-    CONSTRAINT fk_T_Fahrzeuge_Versicherungen 
-        FOREIGN KEY (f_v_nr) 
-        REFERENCES T_Versicherungen(p_v_nr)
-);
-</code>
-]]></description>
-                            <pubDate>Tue, 20 Jan 2026 11:33:00 GMT</pubDate>
-                            <category>LF8</category>
-                            <author>n-km</author>
-                        </item>
-<item>
-                            <title>Webseite in Arbeit</title>
-                            <link>https://n-km.github.io/blog/#webseite-in-arbeit</link>
-                            <description><![CDATA[Momentan wird an der Webseite gearbeitet, um den Style zu optimieren.]]></description>
-                            <pubDate>Sun, 17 Aug 2025 22:00:00 GMT</pubDate>
-                            <category>Aktuelles</category>
-                            <author>n-km</author>
-                        </item>
+      <title>Fertigstellung des Editors</title>
+      <link>https://n-km.github.io/blog/#fertigstellung-des-editors</link>
+      <description><![CDATA[Soeben konnte das neue Style des Editors fertiggestellt werden.<br><img src="images/IMG_0011.jpeg">]]></description>
+      <pubDate>Mon, 23 Feb 2026 11:40:00 GMT</pubDate>
+      <category>Neuigkeiten</category>
+      <author>n-km</author>
+      <guid isPermaLink="false">fertigstellung-des-editors</guid>
+    </item>
   </channel>
 </rss>
