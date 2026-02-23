@@ -124,6 +124,10 @@ article, .about-section, .contact-section {
     margin-bottom: 1.2rem;
 }
 
+article {
+    scroll-margin-top: 100px; /* Verhindert, dass der Titel unter dem Menü verschwindet */
+}
+
 .article-image {
     width: 100%;
     border-radius: 12px;

@@ -161,38 +161,54 @@
     }
 
     function renderPosts(posts) {
-        const container = document.getElementById('blog-content');
-        container.innerHTML = '';
-        let filtered = posts;
-        if (currentCategory !== 'Alle') {
-            filtered = posts.filter(p => p.category === currentCategory);
-        }
-        if (filtered.length === 0) {
-            container.innerHTML = '<p>Keine Blogposts in dieser Kategorie.</p>';
-            return;
-        }
-        filtered.forEach(post => {
-            const article = document.createElement('article');
-            let html = '<div class="post-header">';
-            if(post.category) {
-                html += `<span class="category-label">${post.category}</span>`;
-            }
-            html += `<h2>${post.title}</h2></div>`;
-            html += `<p class="meta">${post.date} · von ${post.author}</p>`;
-            if(post.image) {
-                html += `<img src="${post.image}" alt="Artikelbild" class="article-image">`;
-            }
-            html += `<p>${post.text}</p>`;
-            article.innerHTML = html;
-            container.appendChild(article);
-        });
-
-        // Falls Dropdown aktiv, setze Wert auf aktuelle Kategorie
-        const dropdown = document.querySelector('.category-dropdown');
-        if (dropdown && dropdown.value !== currentCategory) {
-            dropdown.value = currentCategory;
-        }
+    const container = document.getElementById('blog-content');
+    container.innerHTML = '';
+    
+    let filtered = posts;
+    if (currentCategory !== 'Alle') {
+        filtered = posts.filter(p => p.category === currentCategory);
     }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = '<p>Keine Blogposts in dieser Kategorie.</p>';
+        return;
+    }
+
+    filtered.forEach(post => {
+        const article = document.createElement('article');
+        
+        // 1. ANKER-ID GENERIEREN (Wichtig für RSS-Links)
+        // Ersetzt Leerzeichen durch Bindestriche und macht alles klein
+        const postID = post.title.replace(/\s+/g, '-').toLowerCase();
+        article.id = postID; 
+
+        let html = '<div class="post-header">';
+        if(post.category) {
+            html += `<span class="category-label">${post.category}</span>`;
+        }
+        html += `<h2>${post.title}</h2></div>`;
+        
+        // 2. META-DATEN (Jetzt mit Uhrzeit, falls vorhanden)
+        const timeDisplay = post.time ? ` um ${post.time} Uhr` : "";
+        html += `<p class="meta">${post.date}${timeDisplay} · von ${post.author}</p>`;
+        
+        // 3. BILD-LOGIK (Bleibt bestehen, passt zum Editor)
+        if(post.image) {
+            html += `<img src="${post.image}" alt="${post.title}" class="article-image">`;
+        }
+        
+        html += `<p>${post.text}</p>`;
+        
+        article.innerHTML = html;
+        container.appendChild(article);
+    });
+
+    const dropdown = document.querySelector('.category-dropdown');
+    if (dropdown && dropdown.value !== currentCategory) {
+        dropdown.value = currentCategory;
+    }
+}
+
 
     fetch('data.json')
         .then(res => res.json())
