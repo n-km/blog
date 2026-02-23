@@ -206,26 +206,50 @@
         });
 
 
-        // Dark Mode Toggle Logic
+        // --- Advanced Theme Management ---
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-const currentTheme = localStorage.getItem('theme');
+const docEl = document.documentElement;
 
-if (currentTheme) {
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
+/**
+ * Apply the theme and update the UI
+ */
+const applyTheme = (theme, persist = true) => {
+    docEl.setAttribute('data-theme', theme);
+    toggleSwitch.checked = (theme === 'dark');
+    
+    if (persist) {
+        localStorage.setItem('theme', theme);
     }
-}
+    
+    // Optional: Add a temporary class to trigger CSS transitions 
+    // only after the initial load to prevent "flash" on refresh
+    docEl.classList.add('theme-transition');
+    setTimeout(() => docEl.classList.remove('theme-transition'), 1000);
+};
 
+// 1. Determine Initial Theme
+const savedTheme = localStorage.getItem('theme');
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Priority: 1. Saved Preference, 2. System Setting, 3. Default Light
+const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
+// 2. Set Theme Immediately (Prevents white flash)
+applyTheme(initialTheme, !!savedTheme);
+
+// 3. Listen for Toggle Changes
 toggleSwitch.addEventListener('change', (e) => {
-    if (e.target.checked) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
+    const targetTheme = e.target.checked ? 'dark' : 'light';
+    applyTheme(targetTheme);
+});
+
+// 4. Listen for System Changes (e.g., sunset/sunrise auto-switching)
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('theme')) { // Only auto-switch if user hasn't set a manual override
+        applyTheme(e.matches ? 'dark' : 'light', false);
     }
 });
+
     </script>
 </body>
 </html>
