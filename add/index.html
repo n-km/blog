@@ -9,26 +9,19 @@
         :root { --primary: #007aff; }
         .editor-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        
         .actions-bar { display: flex; gap: 10px; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-        
         button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: 0.2s; }
         button:hover { opacity: 0.8; }
         button.primary { background: var(--text-color); color: var(--bg-color); border: none; }
-
         .post-form { background: var(--card-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--border-color); }
         .input-group { margin-bottom: 1.2rem; }
         label { display: block; font-size: 0.7rem; margin-bottom: 4px; opacity: 0.6; text-transform: uppercase; }
-        
         input, textarea { width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid var(--border-color); background: transparent; color: var(--text-color); outline: none; }
         input:focus, textarea:focus { border-bottom-color: var(--primary); }
-
         .post-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
         .danger { color: #ff3b30; border: none; background: transparent; }
-
         .code-area { position: relative; margin-top: 2rem; }
         .copy-badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; }
-        
         #message { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; display: none; background: #34c759; color: white; }
     </style>
 </head>
@@ -55,13 +48,13 @@
         </nav>
 
         <div id="postFormContainer" class="post-form" style="display: none;">
-            <div class="input-group"><label>Titel</label><input type="text" id="postTitle" placeholder="Beispiel: Mein neuer Blogpost"></div>
+            <div class="input-group"><label>Titel</label><input type="text" id="postTitle"></div>
             <div style="display: flex; gap: 20px;">
-                <div class="input-group" style="flex: 2;"><label>Datum</label><input type="text" id="postDate" placeholder="23. Februar 2026"></div>
-                <div class="input-group" style="flex: 1;"><label>Zeit</label><input type="time" id="postTime" value="12:00"></div>
+                <div class="input-group" style="flex: 1;"><label>Datum</label><input type="date" id="postDate"></div>
+                <div class="input-group" style="flex: 1;"><label>Zeit</label><input type="time" id="postTime"></div>
             </div>
-            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory" placeholder="Allgemein"></div>
-            <div class="input-group"><label>Inhalt</label><textarea id="postText" rows="5" placeholder="Hier den Text schreiben..."></textarea></div>
+            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory"></div>
+            <div class="input-group"><label>Inhalt</label><textarea id="postText" rows="5"></textarea></div>
             <button id="savePost" class="primary">Speichern</button>
             <button onclick="document.getElementById('postFormContainer').style.display='none'">Abbrechen</button>
         </div>
@@ -87,12 +80,19 @@
         let posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
         let editIdx = -1;
 
+        // Hilfsfunktion: Formatiert YYYY-MM-DD zu "DD. Monat YYYY"
+        function formatReadableDate(dateStr) {
+            if(!dateStr) return "";
+            const options = { day: '2-digit', month: 'long', year: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('de-DE', options);
+        }
+
         function render() {
             const list = document.getElementById('postsList');
             list.innerHTML = '<h2>Beiträge</h2>';
             posts.forEach((p, i) => {
                 list.innerHTML += `<div class="post-card">
-                    <div><b>${p.title}</b><br><small>${p.date} | ${p.category}</small></div>
+                    <div><b>${p.title}</b><br><small>${formatReadableDate(p.date)} | ${p.category}</small></div>
                     <div>
                         <button onclick="edit(${i})">Edit</button>
                         <button class="danger" onclick="del(${i})">Löschen</button>
@@ -105,20 +105,25 @@
 
         document.getElementById('addPost').onclick = () => {
             editIdx = -1;
-            document.querySelectorAll('input, textarea').forEach(i => i.value = '');
-            document.getElementById('postDate').value = new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'long', year:'numeric'});
-            document.getElementById('postTime').value = "12:00";
+            document.querySelectorAll('.post-form input, .post-form textarea').forEach(i => i.value = '');
+            const now = new Date();
+            document.getElementById('postDate').value = now.toISOString().split('T')[0];
+            document.getElementById('postTime').value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
             document.getElementById('postFormContainer').style.display = 'block';
         };
 
         document.getElementById('savePost').onclick = () => {
+            const dateVal = document.getElementById('postDate').value;
+            const timeVal = document.getElementById('postTime').value;
+            
             const p = {
                 title: document.getElementById('postTitle').value,
-                date: document.getElementById('postDate').value,
+                date: dateVal, // Speichert YYYY-MM-DD für einfache Verarbeitung
+                time: timeVal,
                 category: document.getElementById('postCategory').value,
-                text: document.getElementById('postText').value,
-                time: document.getElementById('postTime').value
+                text: document.getElementById('postText').value
             };
+            
             if(editIdx > -1) posts[editIdx] = p; else posts.unshift(p);
             document.getElementById('postFormContainer').style.display = 'none';
             render();
@@ -129,9 +134,9 @@
             const p = posts[i];
             document.getElementById('postTitle').value = p.title;
             document.getElementById('postDate').value = p.date;
+            document.getElementById('postTime').value = p.time;
             document.getElementById('postCategory').value = p.category;
             document.getElementById('postText').value = p.text;
-            document.getElementById('postTime').value = p.time || "12:00";
             document.getElementById('postFormContainer').style.display = 'block';
         };
 
@@ -147,8 +152,27 @@
         };
 
         document.getElementById('generateRSS').onclick = () => {
-            const items = posts.map(p => `<item><title>${p.title}</title><description>${p.text}</description><pubDate>${p.date}</pubDate></item>`).join('');
-            document.getElementById('rssContent').value = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Blog</title>${items}</channel></rss>`;
+            const items = posts.map(p => {
+                // Erstelle RFC 822 Datum für RSS (z.B. Mon, 23 Feb 2026 12:00:00 +0100)
+                const rfcDate = new Date(`${p.date}T${p.time}`).toUTCString();
+                return `<item>
+                    <title>${p.title}</title>
+                    <description><![CDATA[${p.text}]]></description>
+                    <pubDate>${rfcDate}</pubDate>
+                    <category>${p.category}</category>
+                </item>`;
+            }).join('');
+
+            document.getElementById('rssContent').value = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Minimal Blog</title>
+        <link>https://n-km.github.io/blog/</link>
+        <description>RSS Feed</description>
+        <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+        ${items}
+    </channel>
+</rss>`;
             document.getElementById('rssSection').style.display = 'block';
         };
 
