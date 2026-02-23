@@ -9,20 +9,30 @@
         :root { --primary: #007aff; }
         .editor-container { max-width: 800px; margin: 0 auto; padding: 2rem; }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .actions-bar { display: flex; gap: 10px; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-        button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: 0.2s; }
-        button:hover { opacity: 0.8; }
-        button.primary { background: var(--text-color); color: var(--bg-color); border: none; }
+        
+        .actions-bar { display: flex; gap: 10px; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        
+        button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        button:hover { opacity: 0.8; background: var(--hover-bg); }
+        button.primary { background: var(--text-color); color: var(--bg-color); border: none; font-weight: 500; }
+
         .post-form { background: var(--card-bg); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--border-color); }
         .input-group { margin-bottom: 1.2rem; }
-        label { display: block; font-size: 0.7rem; margin-bottom: 4px; opacity: 0.6; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid var(--border-color); background: transparent; color: var(--text-color); outline: none; }
+        label { display: block; font-size: 0.7rem; margin-bottom: 4px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input, textarea { width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid var(--border-color); background: transparent; color: var(--text-color); outline: none; font-size: 1rem; border-radius: 0; }
         input:focus, textarea:focus { border-bottom-color: var(--primary); }
-        .post-card { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
-        .danger { color: #ff3b30; border: none; background: transparent; }
+
+        .post-card { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; border-bottom: 1px solid var(--border-color); }
+        .post-info h3 { margin: 0 0 4px 0; font-size: 1.1rem; }
+        .post-info p { margin: 0; font-size: 0.85rem; opacity: 0.5; }
+        
+        .danger { color: #ff3b30; border: none; background: transparent; cursor: pointer; }
+
         .code-area { position: relative; margin-top: 2rem; }
-        .copy-badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; }
-        #message { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; display: none; background: #34c759; color: white; }
+        .copy-badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; background: var(--primary); color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
+        #message { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; display: none; background: #34c759; color: white; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -41,85 +51,134 @@
         </header>
 
         <nav class="actions-bar">
-            <button onclick="location.href='../index.html'">Zurück</button>
-            <button id="addPost" class="primary">Neuer Post</button>
+            <button onclick="location.href='../index.html'">Zurück zum Blog</button>
+            <button id="addPost" class="primary">Neuer Beitrag</button>
             <button id="saveData">JSON Download</button>
-            <button id="generateRSS">RSS Erstellen</button>
+            <button id="generateRSS">RSS Generieren</button>
         </nav>
 
         <div id="postFormContainer" class="post-form" style="display: none;">
-            <div class="input-group"><label>Titel</label><input type="text" id="postTitle"></div>
+            <div class="input-group"><label>Titel</label><input type="text" id="postTitle" placeholder="Titel des Beitrags"></div>
             <div style="display: flex; gap: 20px;">
                 <div class="input-group" style="flex: 1;"><label>Datum</label><input type="date" id="postDate"></div>
-                <div class="input-group" style="flex: 1;"><label>Zeit</label><input type="time" id="postTime"></div>
+                <div class="input-group" style="flex: 1;"><label>Uhrzeit</label><input type="time" id="postTime"></div>
             </div>
-            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory" placeholder="z.B. Technik"></div>
-            <div class="input-group"><label>Bild-URL (optional)</label><input type="text" id="postImage" placeholder="images/bild.jpg"></div>
-            <div class="input-group"><label>Inhalt</label><textarea id="postText" rows="5"></textarea></div>
-            <button id="savePost" class="primary">Speichern</button>
-            <button onclick="document.getElementById('postFormContainer').style.display='none'">Abbrechen</button>
+            <div class="input-group"><label>Autor</label><input type="text" id="postAuthor" value="n-km"></div>
+            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory" placeholder="z.B. 🌱 Pflanzen"></div>
+            <div class="input-group"><label>Bild-URL (optional)</label><input type="text" id="postImage" placeholder="images/beispiel.jpg"></div>
+            <div class="input-group"><label>Inhalt (HTML erlaubt)</label><textarea id="postText" rows="8" placeholder="Inhalt hier einfügen..."></textarea></div>
+            <div style="display: flex; gap: 10px;">
+                <button id="savePost" class="primary">Speichern</button>
+                <button onclick="document.getElementById('postFormContainer').style.display='none'">Abbrechen</button>
+            </div>
         </div>
 
         <div id="postsList"></div>
 
         <div class="code-area">
-            <span class="copy-badge" onclick="copyToClipboard('jsonData')">Kopieren</span>
-            <label>JSON Daten</label>
-            <textarea id="jsonData" readonly style="height: 100px; font-family: monospace; font-size: 0.8rem; opacity: 0.6;"></textarea>
+            <span class="copy-badge" onclick="copyToClipboard('jsonData')">JSON Kopieren</span>
+            <label>JSON Output (data.json)</label>
+            <textarea id="jsonData" readonly style="height: 120px; font-family: monospace; font-size: 0.8rem; opacity: 0.7;"></textarea>
         </div>
 
         <div id="rssSection" class="code-area" style="display: none;">
-            <span class="copy-badge" onclick="copyToClipboard('rssContent')">Kopieren</span>
-            <label>RSS Feed</label>
-            <textarea id="rssContent" readonly style="height: 100px; font-family: monospace; font-size: 0.8rem;"></textarea>
+            <span class="copy-badge" onclick="copyToClipboard('rssContent')">RSS Kopieren</span>
+            <label>RSS Output (rss.xml)</label>
+            <textarea id="rssContent" readonly style="height: 120px; font-family: monospace; font-size: 0.8rem;"></textarea>
         </div>
 
-        <div id="message">Kopiert!</div>
+        <div id="message">Erfolgreich kopiert!</div>
     </div>
 
     <script>
-        let posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+        let posts = [];
         let editIdx = -1;
 
-        function formatReadableDate(dateStr) {
+        // 1. Initialisierung: Lade Daten aus LocalStorage oder data.json
+        async function init() {
+            const saved = localStorage.getItem('blog_posts');
+            if (saved && JSON.parse(saved).length > 0) {
+                posts = JSON.parse(saved);
+                render();
+            } else {
+                try {
+                    const response = await fetch('../data.json');
+                    if (response.ok) {
+                        posts = await response.json();
+                        render();
+                    }
+                } catch (e) { console.log("Keine data.json gefunden."); render(); }
+            }
+        }
+
+        // 2. Hilfsfunktionen
+        function escapeXml(str) {
+            return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+        }
+
+        function toRFC822(dateStr, timeStr) {
+            const d = new Date(`${dateStr}T${timeStr || '08:00'}:00`);
+            return d.toUTCString();
+        }
+
+        function formatGermanDate(dateStr) {
             if(!dateStr) return "";
             return new Date(dateStr).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
         }
 
         function render() {
             const list = document.getElementById('postsList');
-            list.innerHTML = '<h2>Beiträge</h2>';
+            list.innerHTML = '<h2>Beiträge verwalten</h2>';
+            
+            // Sortierung: Neueste zuerst (optional, falls gewünscht)
+            // posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
             posts.forEach((p, i) => {
-                list.innerHTML += `<div class="post-card">
-                    <div><b>${p.title}</b><br><small>${formatReadableDate(p.date)} | ${p.category}</small></div>
+                const div = document.createElement('div');
+                div.className = 'post-card';
+                div.innerHTML = `
+                    <div class="post-info">
+                        <h3>${p.title}</h3>
+                        <p>${formatGermanDate(p.date)} • ${p.category || 'Allgemein'}</p>
+                    </div>
                     <div>
                         <button onclick="edit(${i})">Edit</button>
                         <button class="danger" onclick="del(${i})">Löschen</button>
                     </div>
-                </div>`;
+                `;
+                list.appendChild(div);
             });
             document.getElementById('jsonData').value = JSON.stringify(posts, null, 2);
             localStorage.setItem('blog_posts', JSON.stringify(posts));
         }
 
+        // 3. Event Handler
         document.getElementById('addPost').onclick = () => {
             editIdx = -1;
-            document.querySelectorAll('.post-form input, .post-form textarea').forEach(i => i.value = '');
+            document.querySelectorAll('.post-form input, .post-form textarea').forEach(i => {
+                if(i.id !== 'postAuthor') i.value = '';
+            });
             const now = new Date();
             document.getElementById('postDate').value = now.toISOString().split('T')[0];
-            document.getElementById('postTime').value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('postTime').value = "08:00";
             document.getElementById('postFormContainer').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
         };
 
         document.getElementById('savePost').onclick = () => {
+            const title = document.getElementById('postTitle').value;
+            if(!title) return alert("Bitte einen Titel eingeben.");
+
             const p = {
-                title: document.getElementById('postTitle').value,
+                title: title,
                 date: document.getElementById('postDate').value,
                 time: document.getElementById('postTime').value,
+                author: document.getElementById('postAuthor').value,
                 category: document.getElementById('postCategory').value,
                 image: document.getElementById('postImage').value,
                 text: document.getElementById('postText').value
             };
+
             if(editIdx > -1) posts[editIdx] = p; else posts.unshift(p);
             document.getElementById('postFormContainer').style.display = 'none';
             render();
@@ -130,14 +189,16 @@
             const p = posts[i];
             document.getElementById('postTitle').value = p.title;
             document.getElementById('postDate').value = p.date;
-            document.getElementById('postTime').value = p.time;
+            document.getElementById('postTime').value = p.time || "08:00";
+            document.getElementById('postAuthor').value = p.author || "n-km";
             document.getElementById('postCategory').value = p.category;
             document.getElementById('postImage').value = p.image || '';
             document.getElementById('postText').value = p.text;
             document.getElementById('postFormContainer').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
         };
 
-        window.del = (i) => { if(confirm('Löschen?')) { posts.splice(i, 1); render(); } };
+        window.del = (i) => { if(confirm('Beitrag wirklich löschen?')) { posts.splice(i, 1); render(); } };
 
         window.copyToClipboard = (id) => {
             const el = document.getElementById(id);
@@ -149,28 +210,40 @@
         };
 
         document.getElementById('generateRSS').onclick = () => {
-            const items = posts.map(p => {
-                const rfcDate = new Date(`${p.date}T${p.time}`).toUTCString();
-                const imgTag = p.image ? `<br/><img src="${p.image}"/>` : "";
-                return `<item>
-                    <title>${p.title}</title>
-                    <description><![CDATA[${p.text}${imgTag}]]></description>
-                    <pubDate>${rfcDate}</pubDate>
-                    <category>${p.category}</category>
-                </item>`;
-            }).join('');
+            const items = posts.map(post => {
+                if (!post.title) return '';
+                const anchor = encodeURIComponent(post.title.replace(/\s+/g, '-').toLowerCase());
+                const postLink = `https://n-km.github.io/blog/#${anchor}`;
+                const pubDate = toRFC822(post.date, post.time);
+                const imgTag = post.image ? `<br><img src="${post.image}">` : "";
 
-            document.getElementById('rssContent').value = `<?xml version="1.0" encoding="UTF-8"?>
+                return `    <item>
+      <title>${escapeXml(post.title)}</title>
+      <link>${postLink}</link>
+      <description><![CDATA[${post.text || ""}${imgTag}]]></description>
+      <pubDate>${pubDate}</pubDate>
+      <category>${escapeXml(post.category || "")}</category>
+      <author>${escapeXml(post.author || "")}</author>
+      <guid isPermaLink="false">${anchor}</guid>
+    </item>`;
+            }).join('\n');
+
+            const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
-    <channel>
-        <title>Minimal Blog</title>
-        <link>https://n-km.github.io/blog/</link>
-        <description>RSS Feed</description>
-        <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-        ${items}
-    </channel>
+  <channel>
+    <title>Minimal Blog | n-km</title>
+    <link>https://n-km.github.io/blog/</link>
+    <description>RSS-Feed aus data.json</description>
+    <language>de-de</language>
+    <generator>generate-rss.js</generator>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+${items}
+  </channel>
 </rss>`;
+            
+            document.getElementById('rssContent').value = rss;
             document.getElementById('rssSection').style.display = 'block';
+            window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
         };
 
         document.getElementById('saveData').onclick = () => {
@@ -181,18 +254,18 @@
             a.click();
         };
 
-        // Theme Switch Logic
+        // 4. Theme Logic
         const cb = document.getElementById('checkbox');
         const st = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', st);
-        cb.checked = st === 'dark';
+        cb.checked = (st === 'dark');
         cb.onclick = () => {
             const t = cb.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', t);
             localStorage.setItem('theme', t);
         };
 
-        render();
+        init();
     </script>
 </body>
 </html>
