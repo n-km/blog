@@ -53,7 +53,8 @@
                 <div class="input-group" style="flex: 1;"><label>Datum</label><input type="date" id="postDate"></div>
                 <div class="input-group" style="flex: 1;"><label>Zeit</label><input type="time" id="postTime"></div>
             </div>
-            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory"></div>
+            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory" placeholder="z.B. Technik"></div>
+            <div class="input-group"><label>Bild-URL (optional)</label><input type="text" id="postImage" placeholder="images/bild.jpg"></div>
             <div class="input-group"><label>Inhalt</label><textarea id="postText" rows="5"></textarea></div>
             <button id="savePost" class="primary">Speichern</button>
             <button onclick="document.getElementById('postFormContainer').style.display='none'">Abbrechen</button>
@@ -80,11 +81,9 @@
         let posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
         let editIdx = -1;
 
-        // Hilfsfunktion: Formatiert YYYY-MM-DD zu "DD. Monat YYYY"
         function formatReadableDate(dateStr) {
             if(!dateStr) return "";
-            const options = { day: '2-digit', month: 'long', year: 'numeric' };
-            return new Date(dateStr).toLocaleDateString('de-DE', options);
+            return new Date(dateStr).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
         }
 
         function render() {
@@ -113,17 +112,14 @@
         };
 
         document.getElementById('savePost').onclick = () => {
-            const dateVal = document.getElementById('postDate').value;
-            const timeVal = document.getElementById('postTime').value;
-            
             const p = {
                 title: document.getElementById('postTitle').value,
-                date: dateVal, // Speichert YYYY-MM-DD für einfache Verarbeitung
-                time: timeVal,
+                date: document.getElementById('postDate').value,
+                time: document.getElementById('postTime').value,
                 category: document.getElementById('postCategory').value,
+                image: document.getElementById('postImage').value,
                 text: document.getElementById('postText').value
             };
-            
             if(editIdx > -1) posts[editIdx] = p; else posts.unshift(p);
             document.getElementById('postFormContainer').style.display = 'none';
             render();
@@ -136,6 +132,7 @@
             document.getElementById('postDate').value = p.date;
             document.getElementById('postTime').value = p.time;
             document.getElementById('postCategory').value = p.category;
+            document.getElementById('postImage').value = p.image || '';
             document.getElementById('postText').value = p.text;
             document.getElementById('postFormContainer').style.display = 'block';
         };
@@ -153,11 +150,11 @@
 
         document.getElementById('generateRSS').onclick = () => {
             const items = posts.map(p => {
-                // Erstelle RFC 822 Datum für RSS (z.B. Mon, 23 Feb 2026 12:00:00 +0100)
                 const rfcDate = new Date(`${p.date}T${p.time}`).toUTCString();
+                const imgTag = p.image ? `<br/><img src="${p.image}"/>` : "";
                 return `<item>
                     <title>${p.title}</title>
-                    <description><![CDATA[${p.text}]]></description>
+                    <description><![CDATA[${p.text}${imgTag}]]></description>
                     <pubDate>${rfcDate}</pubDate>
                     <category>${p.category}</category>
                 </item>`;
@@ -184,16 +181,16 @@
             a.click();
         };
 
-        // Theme Logic
+        // Theme Switch Logic
         const cb = document.getElementById('checkbox');
+        const st = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', st);
+        cb.checked = st === 'dark';
         cb.onclick = () => {
             const t = cb.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', t);
             localStorage.setItem('theme', t);
         };
-        const st = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', st);
-        cb.checked = st === 'dark';
 
         render();
     </script>
