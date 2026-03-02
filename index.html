@@ -18,13 +18,11 @@
         </div>
     </label>
 </div>
-
-
         <h1>Minimal Blog</h1>
         <nav>
             <button class="tab-btn active" data-tab="home" aria-current="page">Home</button>
-            <button class="tab-btn" data-tab="about">Über</button>
-            <button class="tab-btn" data-tab="contact">Kontakt</button>
+            <button class="tab-btn" data-tab="about">About</button>
+            <button class="tab-btn" data-tab="contact">Contact</button>
         </nav>
     </header>
     <main>
@@ -34,23 +32,78 @@
         </section>
         <section class="tab-content" id="tab-about">
             <div class="about-section">
-                <h2>Über diesen Blog</h2>
-                <p>Willkommen auf meinem minimalistischen Blog im Apple-Style! Hier teile ich Gedanken, Geschichten und Inspirationen rund um Design, Technik und mehr.</p>
-                <p>Das Ziel: Schlichtes, klares Design, das auf allen Geräten funktioniert.</p>
-                <p>Erweitere die <code>data.json</code> Datei, um neue Blogposts hinzuzufügen. Viel Spaß beim Lesen!</p>
-                <h2>RSS-Feed</h2>
-                <p>Allgemein:</p>
+                <h2>About Me</h2>
+                <p>My name is Nils, <br> and I am training to become an IT Specialist for System Integration.
+                <br>
+                In my free-time, I prefer to:
+                <ul>
+                    <li>
+                        develop websites (HTML, CSS, JS, PHP)
+                    </li>
+                    <li>
+                        go outside and take some pictures of wildlife
+                    </li>
+                    <li>
+                        listen to music
+                    </li>
+                </ul>
+                </p>
+                
+                <h2>About This Blog</h2>
+                <p>Welcome to this blog!
+                    <br>
+                    In part of my internship, I am supposed to share my experience as an blog.
+                    This project gets me exciting and I have started creating (supported by AI) an blog website with integrated rss-feed and editor. Like an personal "Content Management System".
+                    <br>
+                    The content is diverse - technic: like everything what I doing at work, hobby: photography and birding, food xD
+                    <br>
+                    Have fun by reading the blog-posts!
+                </p>
+                <h2>RSS Feed</h2>
+                <p>
+                    My RSS feed is an free subscription so you don't miss any new information.
+                    <br>
+                    My recommendations are:
+                    <ul>
+                        <li>
+                            if you are on desktop:
+                        </li>
+                        <ul>
+                            <li>
+                                <b>Browser Extensions:</b> Use tools like RSS Feed Reader or Feeder for Chrome and Firefox to get instant notifications.
+                            </li>
+                            <li>
+                                <b>Dedicated Apps:</b> Try NetNewsWire (macOS) or Fluent Reader (Windows) for a clean, distraction-free reading experience.
+                            </li>
+                            <li>
+                                <b>Web-Based Aggregators:</b> Use Feedly or Inoreader to sync your subscriptions across multiple devices.
+                            </li>
+                        </ul>
+                        <li>
+                            if you are on mobile:
+                        </li>
+                        <ul>
+                            <li>
+                                <b>Reeder (iOS) or Readly (Android):</b> These apps provide a smooth, gesture-based interface for catching up on the go.
+                            </li>
+                            <li>
+                                <b>NetNewsWire:</b> A fantastic, open-source option for iPhone and iPad users that focuses on speed and privacy.
+                            </li>
+                            <li>
+                                <b>Feedly App:</b> The best choise if you want to start reading on your computer and finish exactly where you left off on your phone.
+                            </li>
+                        </ul>
+                    </ul>
+                </p>
+                <p>General:</p>
                 <code>https://n-km.github.io/blog/rss.xml</code>
             </div>
         </section>
         <section class="tab-content" id="tab-contact">
             <div class="contact-section">
-                <h2>Kontakt</h2>
-                <p>Du hast Fragen oder Feedback?</p>
-                <ul>
-                    <li>Email: <a href="mailto:">Coming Soon</a></li>
-                    <li>GitHub: <a href="https://github.com/n-km" target="_blank" rel="noopener">n-km</a></li>
-                </ul>
+                <h2>Contact</h2>
+                <p>You have questions or feedback?</p>
+               <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd3QXU6wMBRgq0Xm_Au5kzOp7UZAAcEQ9AO2ji8NwRNJtrjgw/viewform?embedded=true" width="640" height="606" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
             </div>
         </section>
     </main>
@@ -92,18 +145,18 @@
             // Label
             const label = document.createElement('span');
             label.className = 'category-label-dropdown';
-            label.textContent = "Kategorie:";
+            label.textContent = "Category:";
             group.appendChild(label);
 
             // Select
             const select = document.createElement('select');
             select.className = 'category-dropdown';
-            select.setAttribute('aria-label', 'Kategorie auswählen');
+            select.setAttribute('aria-label', 'select category');
 
             // "Alle"-Option
             const allOpt = document.createElement('option');
             allOpt.value = 'Alle';
-            allOpt.textContent = 'Alle';
+            allOpt.textContent = 'All';
             select.appendChild(allOpt);
 
             categories.forEach(cat => {
