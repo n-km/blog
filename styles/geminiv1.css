@@ -326,6 +326,7 @@ input:checked + .slider:before {
 ul {
     list-style-type: disc;
     margin-bottom: 0.5rem;
+    margin-left: 1.5rem;
 }
 ul ul {
     list-style-type: circle;
