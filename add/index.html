@@ -51,43 +51,43 @@
         </header>
 
         <nav class="actions-bar">
-            <button onclick="location.href='../index.html'">Zurück zum Blog</button>
-            <button id="addPost" class="primary">Neuer Beitrag</button>
-            <button id="saveData">JSON Download</button>
-            <button id="generateRSS">RSS Generieren</button>
+            <button onclick="location.href='../index.html'">Back to Blog</button>
+            <button id="addPost" class="primary">New Entry</button>
+            <button id="saveData">Download JSON</button>
+            <button id="generateRSS">Generate RSS</button>
         </nav>
 
         <div id="postFormContainer" class="post-form" style="display: none;">
-            <div class="input-group"><label>Titel</label><input type="text" id="postTitle" placeholder="Titel des Beitrags"></div>
+            <div class="input-group"><label>Title</label><input type="text" id="postTitle" placeholder="Titel des Beitrags"></div>
             <div style="display: flex; gap: 20px;">
-                <div class="input-group" style="flex: 1;"><label>Datum</label><input type="date" id="postDate"></div>
-                <div class="input-group" style="flex: 1;"><label>Uhrzeit</label><input type="time" id="postTime"></div>
+                <div class="input-group" style="flex: 1;"><label>Date</label><input type="date" id="postDate"></div>
+                <div class="input-group" style="flex: 1;"><label>Time</label><input type="time" id="postTime"></div>
             </div>
-            <div class="input-group"><label>Autor</label><input type="text" id="postAuthor" value="n-km"></div>
-            <div class="input-group"><label>Kategorie</label><input type="text" id="postCategory" placeholder="z.B. 🌱 Pflanzen"></div>
-            <div class="input-group"><label>Bild-URL (optional)</label><input type="text" id="postImage" placeholder="images/beispiel.jpg"></div>
-            <div class="input-group"><label>Inhalt (HTML erlaubt)</label><textarea id="postText" rows="8" placeholder="Inhalt hier einfügen..."></textarea></div>
+            <div class="input-group"><label>Author</label><input type="text" id="postAuthor" value="n-km"></div>
+            <div class="input-group"><label>Category</label><input type="text" id="postCategory" placeholder="example: General"></div>
+            <div class="input-group"><label>Image-URL (optional)</label><input type="text" id="postImage" placeholder="images/example.jpg"></div>
+            <div class="input-group"><label>Content (HTML okay)</label><textarea id="postText" rows="8" placeholder="Write something..."></textarea></div>
             <div style="display: flex; gap: 10px;">
-                <button id="savePost" class="primary">Speichern</button>
-                <button onclick="document.getElementById('postFormContainer').style.display='none'">Abbrechen</button>
+                <button id="savePost" class="primary">Save</button>
+                <button onclick="document.getElementById('postFormContainer').style.display='none'">Abort</button>
             </div>
         </div>
 
         <div id="postsList"></div>
 
         <div class="code-area">
-            <span class="copy-badge" onclick="copyToClipboard('jsonData')">JSON Kopieren</span>
+            <span class="copy-badge" onclick="copyToClipboard('jsonData')">Copy JSON</span>
             <label>JSON Output (data.json)</label>
             <textarea id="jsonData" readonly style="height: 120px; font-family: monospace; font-size: 0.8rem; opacity: 0.7;"></textarea>
         </div>
 
         <div id="rssSection" class="code-area" style="display: none;">
-            <span class="copy-badge" onclick="copyToClipboard('rssContent')">RSS Kopieren</span>
+            <span class="copy-badge" onclick="copyToClipboard('rssContent')">Copy RSS</span>
             <label>RSS Output (rss.xml)</label>
             <textarea id="rssContent" readonly style="height: 120px; font-family: monospace; font-size: 0.8rem;"></textarea>
         </div>
 
-        <div id="message">Erfolgreich kopiert!</div>
+        <div id="message">Copy Successful!</div>
     </div>
 
     <script>
